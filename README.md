@@ -25,7 +25,7 @@
             <li>Linux/macOS:</li>
                 <code>source venv/bin/activate</code>
             <li>Windows:</li>
-                <code>venv/Scripts/activate</code>
+                <code>venv\Scripts\activate</code>
         </ul>
         <p>Você saberá que o ambiente virtual foi criado, pois poderá ser possível visualizar algo como: (venv) C:/Users/seu-usuario/seu-repositório<p><hr>
     <li>Instalar as dependências:</li><hr>
