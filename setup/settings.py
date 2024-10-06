@@ -22,7 +22,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'carbono',
+    'carbono.apps.CarbonoConfig',
     
     'django.contrib.admin',
     'django.contrib.auth',
