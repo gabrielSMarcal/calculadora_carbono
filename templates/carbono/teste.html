@@ -5,28 +5,29 @@
 <h1>Calculadora de Carbono</h1>
 
 <h2>Dados do Carro</h2>
-<form method="POST">
-    {% csrf_token %}
-    
-    <!-- Display all Car objects -->
-    {% for carro in carros %}
-    <div>
-        <p><strong>{{ carro.legenda }}</strong></p>
-        <label for="km_por_mes_{{ carro.id }}">Km percorrido por mês:</label>
-        <input type="number" id="km_por_mes_{{ carro.id }}" name="km_por_mes_{{ carro.id }}"><br>
-    </div>
-    {% endfor %}
-    
-    <button type="submit">Calcular Carro</button>
+<form method="post">
+  {% csrf_token %}
+  {% for carro in carros %}
+  <div>
+      <label for="km_por_mes_{{ carro.id }}">{{ carro.tipo }} (Km percorrido por mês)</label>
+      <input type="number" id="km_por_mes_{{ carro.id }}" name="km_por_mes_{{ carro.id }}"><br>
+  </div>
+  {% endfor %}
+  
+  <button type="submit" >Calcular Carro</button>
 </form>
 
 {% if dados_carro %}
-    <h2>Resultados do Carro</h2>
-    <ul>
-    {% for key, value in dados_carro.items %}
-      <li>{{ key }}: {{ value }}</li>
-    {% endfor %}
-    </ul>
+  <h2>Resultados do Carro</h2>
+  <ul>
+    {% for carro_legenda, resultado in dados_carro.items %}
+      <h3>{{ carro_legenda }}</h3>
+      <li>Crédito Mensal (ton): {{ resultado.credito_mensal }}</li>
+      <li>Crédito Anual (ton): {{ resultado.credito_anual }}</li>
+      <li>Arvores à Plantar: {{ resultato.arvores_a_plantar }}</li>
+      <li>Valor do Crédito: {{ resultado.valor_credito }}</li>
+      {% endfor %}
+  </ul>
 {% endif %}
 
 <h2>Dados de Energia</h2>
