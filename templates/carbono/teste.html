@@ -12,18 +12,18 @@
     {% for carro in carros %}
     <div>
         <p><strong>{{ carro.legenda }}</strong></p>
-        <label for="km_per_month_{{ carro.id }}">Km percorrido por mês:</label>
-        <input type="number" id="km_per_month_{{ carro.id }}" name="km_per_month_{{ carro.id }}" required><br>
+        <label for="km_por_mes_{{ carro.id }}">Km percorrido por mês:</label>
+        <input type="number" id="km_por_mes_{{ carro.id }}" name="km_por_mes_{{ carro.id }}" required><br>
     </div>
     {% endfor %}
     
     <button type="submit">Calcular Carro</button>
 </form>
 
-{% if car_data %}
+{% if dados_carro %}
     <h2>Resultados do Carro</h2>
     <ul>
-    {% for key, value in car_data.items %}
+    {% for key, value in dados_carro.items %}
       <li>{{ key }}: {{ value }}</li>
     {% endfor %}
     </ul>
@@ -34,30 +34,30 @@
     {% csrf_token %}
 
     <!-- Display all Energia objects -->
-    <select name="energy_type" id="energy_type" required>
+    <select name="tipo_de_energia" id="tipo_de_energia" required>
         <option value="">-- Escolha um modo de cálculo --</option>
         {% for energia in energias %}
             <option value="{{ energia.id }}">{{ energia.legenda }}</option>
         {% endfor %}
     </select><br><br>
     
-    {% if selected_energy %}
-        {% if selected_energy.modo_de_calculo == 'kWh' %}  
-            <label for="kwh_used">kWh usados:</label>
-            <input type="number" id="kwh_used" name="kwh_used" required><br>
-        {% elif selected_energy.modo_de_calculo == 'Conta de Energia' %}
-            <label for="bill_amount">Valor da conta:</label>
-            <input type="number" id="bill_amount" name="bill_amount" required><br>
+    {% if energia_selecionada %}
+        {% if energia_selecionada.modo_de_calculo == 'kWh' %}  
+            <label for="kwh_usado">kWh usados:</label>
+            <input type="number" id="kwh_usado" name="kwh_usado" required><br>
+        {% elif energia_selecionada.modo_de_calculo == 'Conta de Energia' %}
+            <label for="valor_da_conta">Valor da conta:</label>
+            <input type="number" id="valor_da_conta" name="valor_da_conta" required><br>
         {% endif %}
     {% endif %}
 
     <button type="submit">Calcular Energia</button>
 </form>
 
-{% if energy_data %}
+{% if dados_energia %}
     <h2>Resultados de Energia</h2>
     <ul>
-        {% for key, value in energy_data.items %}
+        {% for key, value in dados_energia.items %}
             <li>{{ key }}: {{ value }}</li>
         {% endfor %}
     </ul>
