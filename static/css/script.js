@@ -48,3 +48,20 @@ function animateCardContent(card, xOffset, yOffset, scale) {
     initializePaginationProgress();
   });
   
+
+// Calculadora
+  document.getElementById('energia_tipo').addEventListener('change', function() {
+    const kwhInput = document.getElementById('kwh_input');
+    const contaInput = document.getElementById('conta_input');
+
+    if (this.value == 'kwh') {
+        kwhInput.style.display = 'block';
+        contaInput.style.display = 'none';
+    } else if (this.value == 'conta') {
+        kwhInput.style.display = 'none';
+        contaInput.style.display = 'block';
+    } else {
+        kwhInput.style.display = 'none';
+        contaInput.style.display = 'none';
+    }
+});

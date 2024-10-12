@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 
 from .models import Carro, Energia
 import math
@@ -25,15 +25,20 @@ def arvores(co):
     return arvore
 
 # Função de cálculo para carros
-def carro(km_por_mes_str):
+def carro(km_por_mes_str, carro_id):
     km_por_mes = float(km_por_mes_str)
-                
-    consumo = km_por_mes / Carro.consumo
-    emissao = consumo * Carro.emissao
-    credito = emissao / 1000
-    anual = credito * 12
     
-    return (credito, anual)
+    try:
+        carro_obj = Carro.objects.get(pk=carro_id)
+        consumo = km_por_mes / carro_obj.consumo
+        emissao = consumo * carro_obj.emissao
+        credito = emissao / 1000
+        anual = credito * 12
+        
+        return (credito, anual)
+    except (ZeroDivisionError, Carro.DoesNotExist) as e:
+        print(f'Erro no cálculo: {e}')
+        return None
     
 # Função de cálculo para energia por Kwh
 def energia_kwh(kwh_usado):
@@ -55,70 +60,56 @@ def energia_reais(valor_da_conta):
     
     return(credito, anual)
     
-            
+# Renderização do site
 def teste(request):
-    carros = Carro.objects.all()
-    energias = Energia.objects.all()
-    dados_carro = {}
-    dados_energia = {}
-    error_message = None
+    carro_resultado = None
+    energia_resultado = None
+    total_anual = None
+    arvores_necessarias = None
+    valor_tonelada = None
 
     if request.method == 'POST':
-        try:
-            dados_carro = {}
-            for carro in carros:
-                km_por_mes_str = request.POST.get(f'km_por_mes_{carro.id}', None)
-                if km_por_mes_str is None or not km_por_mes_str:
-                    error_message = 'Quilometragem inválida, insira um valor para Km mensal'
-                    return render(request, 'carbono/teste.html', {'carros': carros, 'energias': energias, 'error_message': error_message})
-                
-                dados_carro[carro] = {
-                    'tipo_carro': carro.tipo,
-                    'credito_mensal': round(carro[0](km_por_mes_str), 3),
-                    'credito_anual': round(carro[1](km_por_mes_str), 3),
-                    'arvores_a_plantar': math.ceil(arvores(carro[1](km_por_mes_str))),
-                    'valor_credito': round(valor_da_tonelada(carro[1](km_por_mes_str)), 2),
-                }
-                
-        except (ValueError, TypeError):
-            error_message = "Insira um valor numérico válido para a quilometragem mensal."
-        
-        return render(request, "carbono/teste.html", {"carros": carros, "energias": energias, "error_message": error_message})
+        if 'carro_tipo' in request.POST and 'km_por_mes' in request.POST:
+            carro_tipo = request.POST['carro_tipo']
+            km_por_mes = request.POST['km_por_mes']
+            
+            try:
+                carro_obj = Carro.objects.get(tipo=carro_tipo)
+                credito, anual = carro(km_por_mes, carro_obj.pk)
+                carro_resultado = {'credito': credito, 'anual': anual}
+            except Carro.DoesNotExist:
+                carro_resultado = {'error': f'Carro {carro_tipo} não encontrado.'}
+            except (ValueError, AttributeError) as e:
+                print(f"Erro no cálculo do carro: {e}")
 
-    #Algoritmo de Energia
-    if 'tipo_de_energia' in request.POST:
-        energia_selecionada = get_object_or_404(Energia, pk=request.POST['tipo_de_energia'])
-        try:
-            if energia_selecionada.modo_de_calculo == 'kWh':
+        if 'energia_tipo' in request.POST:
+            energia_tipo = request.POST['energia_tipo']
+            if energia_tipo == 'kwh':
+                kwh_usado = request.POST.get('kwh_usado')
+                if kwh_usado:
+                    try:
+                        credito, anual = energia_kwh(kwh_usado)
+                        energia_resultado = {'credito': credito, 'anual': anual}
+                    except (ValueError, AttributeError) as e:
+                        print(f"Error in energia_kwh calculation: {e}")
+            elif energia_tipo == 'conta':
+                valor_da_conta = request.POST.get('valor_da_conta')
+                if valor_da_conta:
+                    try:
+                        credito, anual = energia_reais(valor_da_conta)
+                        energia_resultado = {'credito': credito, 'anual': anual}
+                    except (ValueError, AttributeError) as e:
+                        print(f"Error in energia_reais calculation: {e}")
 
-                dados_energia = {
-                    'tipo_energia': energia_selecionada.legenda,
-                    'co2_por_mes': round(energia_kwh[0](), 3),
-                    'co2_por_ano': round(energia_kwh[1](), 3),
-                    'arvores_a_plantar': math.ceil(arvores(energia_kwh[1]())),
-                    'valor_credito': round(valor_da_tonelada(energia_kwh[1]()), 2),
-                }
-            elif energia_selecionada.modo_de_calculo == 'Conta de Energia':
-                valor_da_conta= float(request.POST.get('valor_da_conta'))
-                
-                dados_energia = {
-                    'tipo_energia': energia_selecionada.legenda,
-                    'co2_por_mes': round(energia_reais[0](valor_da_conta), 3),
-                    'co2_por_ano': round(energia_reais[1](valor_da_conta), 3),
-                    'arvores_a_plantar': math.ceil(arvores(energia_reais[1](valor_da_conta))),
-                    'valor_credito': round(valor_da_tonelada(energia_reais[1](valor_da_conta)), 2),
-                }
-        except (ValueError, TypeError):
-            error_message = 'Insira um valor numérico válido para os dados de energia'
-
-        return render(request, "carbono/teste.html", {"carros": carros, "energias": energias, "dados_carro": dados_carro, "dados_energia": dados_energia, "error_message": error_message})
-
+        if carro_resultado and energia_resultado:
+            total_anual = carro_resultado['anual'] + energia_resultado['anual']
+            arvores_necessarias = arvores(total_anual)
+            valor_tonelada = valor_da_tonelada(total_anual)
+            
     return render(request, 'carbono/teste.html', {
-        'carros': carros,
-        'energias': energias,
-        'dados_carro': dados_carro,
-        'dados_energia': dados_energia,
-        'error_message': error_message,
+        'carro_resultado': carro_resultado,
+        'energia_resultado': energia_resultado,
+        'total_anual': total_anual,
+        'arvores_necessarias': arvores_necessarias,
+        'valor_tonelada': valor_tonelada
     })
-
-    
