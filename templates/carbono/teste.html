@@ -5,88 +5,83 @@
   <h1>Calculadora de Carbono</h1>
 
   <div class="container">
-      <h2>Cálculo para Carro</h2>
-      <form method="post">
-          {% csrf_token %}
-          <div class="form-group">
-              <label for="carro_tipo">Tipo de Carro:</label>
-              <select id="carro_tipo" name="carro_tipo" class="form-control">
-                  <option value="">Selecione o tipo de carro</option>
-                  <option value="gasolina_1.4">Carro à Gasolina 1.4</option>
-                  <option value="gasolina_1.5_2.0">Carro à Gasolina 1.5 até 2.0</option>
-                  <option value="gasolina_mais_2.0">Carro à Gasolina mais de 2.0</option>
-                  <option value="alcool_1.4">Carro à Álcool 1.4</option>
-                  <option value="alcool_1.5_2.0">Carro à Álcool 1.5 até 2.0</option>
-                  <option value="alcool_mais_2.0">Carro à Álcool mais de 2.0</option>
-                  <option value="gas">Carro movido à Gás</option>
-              </select>
-          </div>
+    <h2>Cálculo para Carro</h2>
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="carro_tipo">Tipo de Carro:</label>
+        <select id="carro_tipo" name="carro_tipo" class="form-control">
+          <option value="">Selecione o tipo de carro</option>
+          {% for carro in carros %}
+          <option value="{{ carro.tipo }}">{{ carro.tipo }}</option>
+          {% endfor %}
+        </select>
+      </div>
 
-          <div class="form-group">
-              <label for="km_por_mes">Km por mês:</label>
-              <input type="number" id="km_por_mes" name="km_por_mes" class="form-control" required>
-          </div>
+      <div class="form-group">
+        <label for="km_por_mes">Km por mês:</label>
+        <input type="number" id="km_por_mes" name="km_por_mes" class="form-control" required>
+      </div>
 
-          <button type="submit" class="btn btn-primary">Calcular</button>
-      </form>
+      <button type="submit" class="btn btn-primary">Calcular</button>
+    </form>
 
-
-      {% if carro_resultado %}
-          <p><b>Resultado do Carro:</b></p>
-          <p>Crédito Mensal: {{ carro_resultado.credito }} toneladas</p>
-          <p>Crédito Anual: {{ carro_resultado.anual }} toneladas</p>
-      {% endif %}
+    {% if carro_resultado %}
+        <p><b>Resultado:</b></p>
+        <p>Crédito de Carbono Mensal: {{ carro_resultado.credito }} tco<sub>2</sub></p>
+        <p>Crédito de Carbono Anual: {{ carro_resultado.anual }} tco<sub>2</sub></p>
+    {% endif %}
   </div>
 
   <div class="container">
-      <h2>Cálculo para Energia</h2>
-      <form method="post">
-        {% csrf_token %}
+    <h2>Cálculo para Energia</h2>
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="energia_tipo">Tipo de Energia:</label>
+        <select id="energia_tipo" name="energia_tipo" class="form-control">
+          <option value="">Selecione o tipo de energia</option>
+          {% for energia in energias %}
+            <option value="{{ energia.modo_de_calculo }}">{{ energia.legenda }}</option>
+          {% endfor %}
+        </select>
+      </div>
 
+      
+      <div id="kwh_input" style="display: none;">
         <div class="form-group">
-            <label for="energia_tipo">Tipo de Energia:</label>
-            <select id="energia_tipo" name="energia_tipo" class="form-control">
-                <option value="">Selecione o tipo de energia</option>
-                <option value="kwh">Energia por kWh</option>
-                <option value="conta">Energia por conta de luz</option>
-            </select>
+          <label for="kwh_usado">kWh Usado:</label>
+          <input type="number" id="kwh_usado" name="kwh_usado" class="form-control" required>
         </div>
+      </div>
 
-        <div id="kwh_input" style="display: none;">
-            <div class="form-group">
-                <label for="kwh_usado">kWh Usado:</label>
-                <input type="number" id="kwh_usado" name="kwh_usado" class="form-control" required>
-            </div>
+      <div id="conta_input" style="display: none;">
+        <div class="form-group">
+          <label for="valor_da_conta">Valor da Conta de Luz:</label>
+          <input type="number" id="valor_da_conta" name="valor_da_conta" class="form-control" required>
         </div>
-        
-        <div id="conta_input" style="display: none;">
-            <div class="form-group">
-                <label for="valor_da_conta">Valor da Conta de Luz:</label>
-                <input type="number" id="valor_da_conta" name="valor_da_conta" class="form-control" required>
-            </div>
-        </div>
+      </div>
 
+      <button type="submit" class="btn btn-primary">Calcular</button>
+    </form>
 
-        <button type="submit" class="btn btn-primary">Calcular</button>
-      </form>
+    {% if energia_resultado %}
+        <p>Crédito de Carbono Mensal: {{ energia_resultado.credito }} tco<sub>2</sub></p>
+        <p>Crédito de Carbono Anual: {{ energia_resultado.anual }} tco<sub>2</sub></p>
+    {% endif %}
 
-        {% if energia_resultado %}
-            <p><b>Resultado da Energia:</b></p>
-            <p>Crédito Mensal: {{ energia_resultado.credito }} toneladas</p>
-            <p>Crédito Anual: {{ energia_resultado.anual }} toneladas</p>
-        {% endif %}
 
   </div>
 
   {% if total_anual %}
   <div class="container">
-      <h2>Resultado Total</h2>
-      <p>Total Anual: {{ total_anual }} toneladas</p>
-      <p>Árvores necessárias: {{ arvores_necessarias }} árvores</p>
-      <p>Valor da tonelada: R$ {{ valor_tonelada }}</p>
+    <h2>Resultado Total</h2>
+    <p>Total Anual: {{ total_anual }} toneladas</p>
+    <p>Árvores necessárias: {{ arvores_necessarias }} árvores</p>
+    <p>Valor da tonelada: R$ {{ valor_tonelada }}</p>
   </div>
   {% endif %}
-  </div>
+</div>
 
 <style>
   .center {
@@ -96,5 +91,33 @@
     padding: 10px;
   }
 </style>
+
+<script>
+    // JavaScript para controlar visibilidade dos inputs
+    const energiaTipoSelect = document.getElementById('energia_tipo');
+    const kwhInput = document.getElementById('kwh_input');
+    const contaInput = document.getElementById('conta_input');
+    const kwhInputField = document.getElementById('kwh_usado');  // campo de kWh
+    const contaInputField = document.getElementById('valor_da_conta');  // campo de valor da conta
+
+    energiaTipoSelect.addEventListener('change', () => {
+    if (energiaTipoSelect.value === 'kwh') {
+        kwhInput.style.display = 'block';  // Mostra campo de kWh
+        contaInput.style.display = 'none';  // Esconde campo de valor da conta
+        kwhInputField.disabled = false;  // Habilita input de kWh
+        contaInputField.disabled = true;  // Desabilita input de valor da conta
+    } else if (energiaTipoSelect.value === 'conta') {
+        kwhInput.style.display = 'none';  // Esconde campo de kWh
+        contaInput.style.display = 'block';  // Mostra campo de valor da conta
+        kwhInputField.disabled = true;  // Desabilita input de kWh
+        contaInputField.disabled = false;  // Habilita input de valor da conta
+    } else {
+        kwhInput.style.display = 'none';  // Esconde ambos os campos
+        contaInput.style.display = 'none';
+        kwhInputField.disabled = true;  // Desabilita ambos os campos
+        contaInputField.disabled = true;
+    }
+    });
+  </script>
 
 {% endblock %}
