@@ -39,15 +39,16 @@
       {% csrf_token %}
       <div class="form-group">
         <label for="energia_tipo">Tipo de Energia:</label>
-        <select id="energia_tipo" name="energia_tipo" class="form-control">
-          <option value="">Selecione o tipo de energia</option>
+        <div id="energia_tipo">
           {% for energia in energias %}
-            <option value="{{ energia.modo_de_calculo }}">{{ energia.legenda }}</option>
+            <div>
+              <input type="radio" id="energia_{{ forloop.counter }}" name="energia_tipo" value="{{ energia.modo_de_calculo }}" class="form-check-input">
+              <label for="energia_{{ forloop.counter }}" class="form-check-label">{{ energia.legenda }}</label>
+            </div>
           {% endfor %}
-        </select>
+        </div>
       </div>
 
-      
       <div id="kwh_input" style="display: none;">
         <div class="form-group">
           <label for="kwh_usado">kWh Usado:</label>
@@ -66,11 +67,9 @@
     </form>
 
     {% if energia_resultado %}
-        <p>Crédito de Carbono Mensal: {{ energia_resultado.credito }} tco<sub>2</sub></p>
-        <p>Crédito de Carbono Anual: {{ energia_resultado.anual }} tco<sub>2</sub></p>
+      <p>Crédito de Carbono Mensal: {{ energia_resultado.credito }} tco<sub>2</sub></p>
+      <p>Crédito de Carbono Anual: {{ energia_resultado.anual }} tco<sub>2</sub></p>
     {% endif %}
-
-
   </div>
 
   {% if total_anual %}
@@ -81,6 +80,13 @@
     <p>Valor da tonelada: R$ {{ valor_tonelada }}</p>
   </div>
   {% endif %}
+
+  <div class="container">
+    <form method="post" action="{% url 'limpar_sessao' %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Limpar Resultados</button>
+    </form>
+  </div>
 </div>
 
 <style>
@@ -93,31 +99,36 @@
 </style>
 
 <script>
-    // JavaScript para controlar visibilidade dos inputs
-    const energiaTipoSelect = document.getElementById('energia_tipo');
-    const kwhInput = document.getElementById('kwh_input');
-    const contaInput = document.getElementById('conta_input');
-    const kwhInputField = document.getElementById('kwh_usado');  // campo de kWh
-    const contaInputField = document.getElementById('valor_da_conta');  // campo de valor da conta
+document.addEventListener('DOMContentLoaded', function() {
+  // JavaScript para controlar visibilidade dos inputs
+  const energiaTipoRadios = document.querySelectorAll('input[name="energia_tipo"]');
+  const kwhInput = document.getElementById('kwh_input');
+  const contaInput = document.getElementById('conta_input');
+  const kwhInputField = document.getElementById('kwh_usado');  // campo de kWh
+  const contaInputField = document.getElementById('valor_da_conta');  // campo de valor da conta
 
-    energiaTipoSelect.addEventListener('change', () => {
-    if (energiaTipoSelect.value === 'kwh') {
+  energiaTipoRadios.forEach((radio) => {
+    radio.addEventListener('change', () => {
+      console.log(`Radio button changed: ${radio.value}`);
+      if (radio.value === 'Kwh') {
         kwhInput.style.display = 'block';  // Mostra campo de kWh
         contaInput.style.display = 'none';  // Esconde campo de valor da conta
         kwhInputField.disabled = false;  // Habilita input de kWh
         contaInputField.disabled = true;  // Desabilita input de valor da conta
-    } else if (energiaTipoSelect.value === 'conta') {
+      } else if (radio.value === 'Conta de Luz') {
         kwhInput.style.display = 'none';  // Esconde campo de kWh
         contaInput.style.display = 'block';  // Mostra campo de valor da conta
         kwhInputField.disabled = true;  // Desabilita input de kWh
         contaInputField.disabled = false;  // Habilita input de valor da conta
-    } else {
+      } else {
         kwhInput.style.display = 'none';  // Esconde ambos os campos
         contaInput.style.display = 'none';
         kwhInputField.disabled = true;  // Desabilita ambos os campos
         contaInputField.disabled = true;
-    }
+      }
     });
-  </script>
+  });
+});
+</script>
 
 {% endblock %}

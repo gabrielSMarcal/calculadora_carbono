@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.core.exceptions import ObjectDoesNotExist
+import math
 
 from .models import Carro, Energia
-import math
+
 
 
 def index(request):
@@ -46,6 +47,8 @@ def energia_kwh(kwh_usado, energia_obj):
 
 
 def energia_reais(valor_da_conta, energia_obj):
+    valor_da_conta = float(valor_da_conta)
+    
     conversao = valor_da_conta / 0.37
     emissao = conversao * energia_obj.emissao
     credito = emissao / 1000
@@ -58,50 +61,54 @@ def teste(request):
     carros = Carro.objects.all()
     energias = Energia.objects.all()
     
-    carro_resultado = None
-    energia_resultado = None
+    if 'carro_resultado' not in request.session:
+        request.session['carro_resultado'] = None
+    if 'energia_resultado' not in request.session:
+        request.session['energia_resultado'] = None
+    
+    carro_resultado = request.session['carro_resultado']
+    energia_resultado = request.session['energia_resultado']
     total_anual = None
     arvores_necessarias = None
     valor_tonelada = None
 
     if request.method == 'POST':
-        if 'carro_tipo' in request.POST and 'km_por_mes' in request.POST:
-            carro_tipo = request.POST['carro_tipo']
-            km_por_mes = request.POST['km_por_mes']
+        carro_tipo = request.POST.get('carro_tipo')
+        km_por_mes = request.POST.get('km_por_mes')
+        energia_tipo = request.POST.get('energia_tipo')
+                
+        if carro_tipo and km_por_mes:
+            carro_obj = Carro.objects.get(tipo=carro_tipo)
+            credito, anual = carro(km_por_mes, carro_obj)
+            carro_resultado = {'credito': round(credito, 3), 'anual': round(anual, 3)}
+            request.session['carro_resultado'] = carro_resultado
+            
+        else:
+            energia_resultado = {'error': 'Modo de cálculo não encontrado'}
 
+        
+        if energia_tipo:
             try:
-                # Obtenha a instância do Carro correta aqui
-                carro_obj = Carro.objects.get(tipo=carro_tipo)
-                credito, anual = carro(km_por_mes, carro_obj)
-                carro_resultado = {'credito': round(credito, 3), 'anual': round(anual,3)}
-            except Carro.DoesNotExist:
-                carro_resultado = {'error': f'Carro {carro_tipo} não encontrado.'}
-            except (ValueError, AttributeError) as e:
-                print(f"Erro no cálculo do carro: {e}")
-
-        if 'energia_tipo' in request.POST:
-            energia_tipo = request.POST['energia_tipo']
-
-            # Obtenha a instância de Energia correta aqui
-            energia_obj = Energia.objects.get(modo_de_calculo=energia_tipo)
-
-            if energia_tipo == 'kwh' and kwh_usado:
-                kwh_usado = request.POST.get('kwh_usado')
-                if kwh_usado:
-                    credito, anual = energia_kwh(kwh_usado, energia_obj)
-                    energia_resultado = {'credito': round(credito, 3), 'anual': round(anual, 3)}
-                    
-            elif energia_tipo == 'conta' and valor_da_conta:
-                valor_da_conta = request.POST.get('valor_da_conta')
-                if valor_da_conta:
-                    credito, anual = energia_reais(valor_da_conta, energia_obj)
-                    energia_resultado = {'credito': credito, 'anual': anual}
-            else:
-                energia_resultado = {'error': 'Erro: Nenhum valor válido foi fornecido para o cálculo de energia.'}
-
-
+                energia_obj = Energia.objects.get(modo_de_calculo=energia_tipo)
+                if energia_tipo == 'Kwh':
+                    kwh_usado = request.POST.get('kwh_usado')
+                    if kwh_usado:
+                        credito, anual = energia_kwh(kwh_usado, energia_obj)
+                        energia_resultado = {'credito': round(credito, 3), 'anual': round(anual, 3)}
+                        request.session['energia_resultado'] = energia_resultado
+                elif energia_tipo == 'Conta de Luz':
+                    valor_da_conta = request.POST.get('valor_da_conta')
+                    if valor_da_conta:
+                        credito, anual = energia_reais(valor_da_conta, energia_obj)
+                        energia_resultado = {'credito': round(credito, 3), 'anual': round(anual, 3)}
+                        request.session['energia_resultado'] = energia_resultado
+                else:
+                    energia_resultado = {'error': 'Modo de cálculo não encontrado'}
+            except ObjectDoesNotExist:
+                energia_resultado = {'error': 'Modo de cálculo não encontrado'}
+            
         if carro_resultado or energia_resultado:
-            total_anual = round((carro_resultado['anual'] or 0 + energia_resultado['anual'] or 0), 3)
+            total_anual = round((carro_resultado['anual'] if carro_resultado else 0) + (energia_resultado['anual'] if energia_resultado else 0), 3)
             arvores_necessarias = math.ceil(arvores(total_anual))
             valor_tonelada = round(valor_da_tonelada(total_anual), 2)
 
@@ -114,3 +121,8 @@ def teste(request):
         'carros': carros,
         'energias': energias,
     })
+    
+def limpar_sessao(request):
+        request.session['carro_resultado'] = None
+        request.session['energia_resultado'] = None
+        return redirect('teste')
