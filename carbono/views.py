@@ -22,8 +22,8 @@ def arvores(co):
     return arvore
 
 
-def carro(km_por_mes_str, carro_obj):
-    km_por_mes = float(km_por_mes_str)
+def carro(km_por_mes, carro_obj):
+    km_por_mes = float(km_por_mes)
 
     try:
         consumo = km_por_mes / carro_obj.consumo
@@ -31,6 +31,7 @@ def carro(km_por_mes_str, carro_obj):
         credito = emissao / 1000
         anual = credito * 12
         return (credito, anual)
+    
     except (ZeroDivisionError, Carro.DoesNotExist) as e:
         print(f'Erro no cálculo: {e}')
         return None
