@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cálculo de Carbono</title>
+  <link rel="stylesheet" href="css/pagsegundaria.css">
+  <script>
+    function calcularCarro() {
+      const tipoCarro = document.getElementById('tipo-carro').value;
+      const kmPercorridos = document.getElementById('km-carro').value;
+      let emissaoTotal, emissaoMensal, emissaoAnual;
+
+      // Cálculo para álcool ou gasolina
+      if (tipoCarro === "alcool") {
+          emissaoTotal = kmPercorridos * 0.8; // Exemplo de cálculo para álcool
+      } else {
+          emissaoTotal = kmPercorridos * 2.3; // Exemplo de cálculo para gasolina
+      }
+
+      // Cálculo mensal e anual
+      emissaoMensal = emissaoTotal / 12;
+      emissaoAnual = emissaoTotal;
+
+      // Exibir resultados
+      document.getElementById('resultado-carro-mensal').textContent = `Emissão mensal: ${emissaoMensal.toFixed(2)} kg CO₂`;
+      document.getElementById('resultado-carro-anual').textContent = `Emissão anual: ${emissaoAnual.toFixed(2)} kg CO₂`;
+  }
+
+  // Função para limpar os dados
+  function limparCarro() {
+      document.getElementById('tipo-carro').value = "alcool"; // Volta para a opção padrão
+      document.getElementById('km-carro').value = "";
+      document.getElementById('resultado-carro-mensal').textContent = "";
+      document.getElementById('resultado-carro-anual').textContent = "";
+  }
+
+    
+  function calcularTransportePublico() {
+    const kmPercorridos = document.getElementById('km-onibus').value;
+    const fatorEmissaoOnibus = 0.1; // Exemplo: Ônibus emite 0.1 kg CO₂ por km
+    let emissaoTotal, emissaoMensal, emissaoAnual;
+    
+    // Cálculo de emissão total para ônibus
+    emissaoTotal = kmPercorridos * fatorEmissaoOnibus;
+    
+    // Cálculos mensais e anuais
+    emissaoMensal = emissaoTotal * 20;  // Exemplo: considerando 20 dias de uso por mês
+    emissaoAnual = emissaoMensal * 12;
+
+    // Exibir resultados
+    document.getElementById('resultado-onibus-mensal').textContent = `Emissão mensal: ${emissaoMensal.toFixed(2)} kg CO₂`;
+    document.getElementById('resultado-onibus-anual').textContent = `Emissão anual: ${emissaoAnual.toFixed(2)} kg CO₂`;
+  }
+
+  // Função para limpar os dados
+  function limparTransporte() {
+    document.getElementById('km-onibus').value = "";
+    document.getElementById('resultado-onibus-mensal').textContent = "";
+    document.getElementById('resultado-onibus-anual').textContent = "";
+  }
+
+  function exibirInputEnergia() {
+    const tipoEnergia = document.getElementById('tipo-energia').value;
+    const inputValorConta = document.getElementById('input-valor-conta');
+    const inputKwh = document.getElementById('input-kwh');
+    
+    // Alterna entre os inputs com base na seleção
+    if (tipoEnergia === "valor-conta") {
+      inputValorConta.style.display = "block";
+      inputKwh.style.display = "none";
+    } else {
+      inputValorConta.style.display = "none";
+      inputKwh.style.display = "block";
+    }
+  }
+
+  function calcularEnergia() {
+    const tipoEnergia = document.getElementById('tipo-energia').value;
+    let emissaoTotal, emissaoMensal, emissaoAnual;
+    
+    // Cálculo baseado no valor da conta
+    if (tipoEnergia === "valor-conta") {
+      const valorConta = document.getElementById('valor-conta-input').value;
+      emissaoTotal = valorConta * 0.075; // Exemplo de cálculo para valor da conta
+    } else {
+      // Cálculo baseado no consumo em kWh
+      const kwhConsumidos = document.getElementById('kwh-consumidos-input').value;
+      emissaoTotal = kwhConsumidos * 0.84; // Exemplo de cálculo para consumo em kWh
+    }
+    
+    // Cálculos mensais e anuais
+    emissaoMensal = emissaoTotal;
+    emissaoAnual = emissaoTotal * 12;
+
+    // Exibir resultados
+    document.getElementById('resultado-energia-mensal').textContent = `Emissão mensal: ${emissaoMensal.toFixed(2)} kg CO₂`;
+    document.getElementById('resultado-energia-anual').textContent = `Emissão anual: ${emissaoAnual.toFixed(2)} kg CO₂`;
+  }
+
+  // Função para limpar os dados
+  function limparEnergia() {
+    document.getElementById('valor-conta-input').value = "";
+    document.getElementById('kwh-consumidos-input').value = "";
+    document.getElementById('resultado-energia').textContent = "";
+    document.getElementById('resultado-energia-mensal').textContent = "";
+    document.getElementById('resultado-energia-anual').textContent = "";
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Cálculo de Emissão de Carbono</h1>
+  </header>
+
+  <div class="calculadora-container">
+    <div class="calculadora" id="carro-calculo">
+      <h2>Carro</h2>
+      <label for="tipo-carro">Tipo de Carro:</label>
+      <select id="tipo-carro">
+        <option value="alcool">Álcool</option>
+        <option value="gasolina">Gasolina</option>
+      </select>
+      
+      <label for="km-carro">Km percorridos:</label>
+      <input type="number" id="km-carro" placeholder="Informe os km">
+      <button onclick="calcularCarro()">Calcular</button>
+      <button type="button" onclick="limparCarro()">Limpar</button>
+      <p id="resultado-carro"></p>
+      <p id="resultado-carro-mensal"></p>
+      <p id="resultado-carro-anual"></p>
+    </div>
+
+    <div class="calculadora" id="onibus-calculo">
+      <h2>Transporte Público - Ônibus</h2>
+    
+      <!-- Input para os km percorridos -->
+      <div>
+        <label for="km-onibus">Km percorridos:</label>
+        <input type="number" id="km-onibus" placeholder="Informe os km">
+      </div>
+      
+      <!-- Botões -->
+      <button onclick="calcularTransportePublico()">Calcular</button>
+      <button type="button" onclick="limparTransporte()">Limpar</button>
+      
+      <!-- Resultados -->
+      <p id="resultado-onibus-mensal"></p>
+      <p id="resultado-onibus-anual"></p>
+    </div>
+
+    <div class="calculadora" id="energia-calculo">
+      <h2>Energia Elétrica</h2>
+      
+      <!-- Select para tipo de cálculo -->
+      <label for="tipo-energia">Tipo de Cálculo:</label>
+      <select id="tipo-energia" onchange="exibirInputEnergia()">
+        <option value="valor-conta">Valor da Conta</option>
+        <option value="kwh">kWh/mês</option>
+      </select>
+      
+      <!-- Input para valor da conta -->
+      <div id="input-valor-conta">
+        <label for="valor-conta">Valor da Conta (R$):</label>
+        <input type="number" id="valor-conta-input" placeholder="Informe o valor da conta">
+      </div>
+      
+      <!-- Input para kWh consumidos -->
+      <div id="input-kwh" style="display: none;">
+        <label for="kwh-consumidos">Consumo em kWh:</label>
+        <input type="number" id="kwh-consumidos-input" placeholder="Informe o consumo">
+      </div>
+    
+      <!-- Botões -->
+      <button onclick="calcularEnergia()">Calcular</button>
+      <button type="button" onclick="limparEnergia()">Limpar</button>
+      
+      <!-- Resultados -->
+      <p id="resultado-energia-mensal"></p>
+      <p id="resultado-energia-anual"></p>
+    </div>
+  </div>
+    
+  <div class="emissao-container calculadora-container">
+    <div class="calculadora" id="emissao-total">
+        <h3>Total de emissão:</h3>
+        <p>0.00 kg CO₂</p>
+    </div>
+    
+    <div class = "button-voltar ">
+      <button onclick="window.location.href='index.html'">Voltar à Página Inicial</button>
+    </div>
+
+    <div class="calculadora" id="compensacao">
+        <h3>Compensação necessária:</h3>
+        <p class="resul-compensacao">0 árvores por ano</p>
+    </div>
+</div>
+  
+  <script>
+    // Exibe o campo apropriado com base na opção selecionada
+    document.querySelectorAll('input[name="tipo-energia"]').forEach((elem) => {
+      elem.addEventListener('change', function(event) {
+        if (event.target.value === 'valor-conta') {
+          document.getElementById('input-valor-conta').style.display = 'block';
+          document.getElementById('input-kwh').style.display = 'none';
+        } else {
+          document.getElementById('input-valor-conta').style.display = 'none';
+          document.getElementById('input-kwh').style.display = 'block';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
