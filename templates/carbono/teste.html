@@ -72,11 +72,14 @@
     {% endif %}
   </div>
 
-  */ Aqui pode colocar divs com o cálculo de Ônibus, semelhante ao Carros,
+  {% comment "" %}
+  Aqui pode colocar divs com o cálculo de Ônibus, semelhante ao Carros,
   Não precisa inserir código Django ainda, pode colocar o HTML puro
 
   Também inserir as divs para Gás, semelhante ao energia,
-  Pode usar também o JavaScript com lógica para as opções*/
+  Pode usar também o JavaScript com lógica para as opções
+  {% endcomment %}
+
 
   {% if total_anual %}
   <div class="container">
@@ -110,26 +113,26 @@ document.addEventListener('DOMContentLoaded', function() {
   const energiaTipoRadios = document.querySelectorAll('input[name="energia_tipo"]');
   const kwhInput = document.getElementById('kwh_input');
   const contaInput = document.getElementById('conta_input');
-  const kwhInputField = document.getElementById('kwh_usado');  // campo de kWh
-  const contaInputField = document.getElementById('valor_da_conta');  // campo de valor da conta
+  const kwhInputField = document.getElementById('kwh_usado');
+  const contaInputField = document.getElementById('valor_da_conta');
 
   energiaTipoRadios.forEach((radio) => {
     radio.addEventListener('change', () => {
       console.log(`Radio button changed: ${radio.value}`);
       if (radio.value === 'Kwh') {
-        kwhInput.style.display = 'block';  // Mostra campo de kWh
-        contaInput.style.display = 'none';  // Esconde campo de valor da conta
-        kwhInputField.disabled = false;  // Habilita input de kWh
-        contaInputField.disabled = true;  // Desabilita input de valor da conta
-      } else if (radio.value === 'Conta de Luz') {
-        kwhInput.style.display = 'none';  // Esconde campo de kWh
-        contaInput.style.display = 'block';  // Mostra campo de valor da conta
-        kwhInputField.disabled = true;  // Desabilita input de kWh
-        contaInputField.disabled = false;  // Habilita input de valor da conta
-      } else {
-        kwhInput.style.display = 'none';  // Esconde ambos os campos
+        kwhInput.style.display = 'block';
         contaInput.style.display = 'none';
-        kwhInputField.disabled = true;  // Desabilita ambos os campos
+        kwhInputField.disabled = false;
+        contaInputField.disabled = true;
+      } else if (radio.value === 'Conta de Luz') {
+        kwhInput.style.display = 'none';
+        contaInput.style.display = 'block';
+        kwhInputField.disabled = true;
+        contaInputField.disabled = false;
+      } else {
+        kwhInput.style.display = 'none'; 
+        contaInput.style.display = 'none';
+        kwhInputField.disabled = true;
         contaInputField.disabled = true;
       }
     });
