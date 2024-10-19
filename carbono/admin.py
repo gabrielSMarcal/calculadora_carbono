@@ -18,3 +18,11 @@ class EnergiaAdmin(admin.ModelAdmin):
     list_display_links = ('modo_de_calculo',)
     
 admin.site.register(Energia, EnergiaAdmin)
+
+
+class GasAdmin(admin.ModelAdmin):
+    pass
+
+
+class OnibusAdmin(admin.ModelAdmin):
+    pass

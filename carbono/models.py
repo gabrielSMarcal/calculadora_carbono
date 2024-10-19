@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.base import class_prepared
 
 class Carro(models.Model):
     tipo = models.CharField(max_length=100, null=False, blank=False)
@@ -16,3 +17,9 @@ class Energia(models.Model):
     
     def __str__(self):
         return f'Modo de cálculo [modo_de_calculo={self.modo_de_calculo}]'
+
+class Gas(models.Model):
+    pass
+
+class Onibus(models.Model):
+    pass

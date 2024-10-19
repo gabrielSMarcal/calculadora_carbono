@@ -25,7 +25,7 @@ def arvores(co):
 
 def carro(km_por_mes_str, carro_obj):
     km_por_mes = float(km_por_mes_str)
-    emissao = km_por_mes * carro_obj.emissao
+    emissao = km_por_mes * carro_obj.consumo * carro_obj.emissao 
     credito = emissao / 1000
     anual = credito * 12
     
@@ -55,22 +55,29 @@ def energia_reais(valor_da_conta, energia_obj):
 
 # VvV Para Pedro, insira as funções aqui VvV
 
-def onibus(km_por_mes, onibus_obj):
-    # Cálculo para carbono de ônibus
-    
-    pass
+def onibus(km_por_mes_str, onibus_obj):
+    km_por_mes = float (km_por_mes_str)
+    emissao = km_por_mes * carro_obj.emissao * carro_obj.consumo * 40
+    credito = (emissao / 1000)
+    anual = credito * 12
+
+    return (credito, anual)
 
 
 def gas_botijao(botijao, gas_obj):
-    # Cálculo para carbono de Botijão de Gás
-    
-    pass
+    valor_do_botijão = float(botijao) 
+    credito = (valor_do_botijão * 40.15) / 1000
+    anual = credito * 12
 
+    return (credito, anual)
+ 
 
 def gas_encanado(area, gas_obj):
-    # Cálculo para carbono baseado na área em m³ do Gás Encanado
-    
-    pass
+    area = float (area) 
+    credito = (area * 1.997) / 1000
+    anual = credito * 12
+
+    return (credito, anual)
 
 
 def teste(request):
