@@ -156,6 +156,56 @@ function limparGas() {
 
 
 </script>
+
+  function calcularGas() {
+  const tipoGas = document.getElementById("tipo-gas").value;
+  let emissaoMensal = 0;
+  let emissaoAnual = 0;
+
+  if (tipoGas === "botijao") {
+    const qtdBotijao = parseFloat(document.getElementById("qtd-botijao").value);
+    if (!isNaN(qtdBotijao)) {
+      // Exemplo de cálculo de emissão para botijão de gás
+      emissaoMensal = qtdBotijao * 2.98; // Aproximadamente 2.98 kg de CO2 por botijão de 13kg
+    }
+  } else if (tipoGas === "encanado") {
+    const qtdEncanado = parseFloat(document.getElementById("qtd-encanado").value);
+    if (!isNaN(qtdEncanado)) {
+      // Exemplo de cálculo de emissão para gás encanado
+      emissaoMensal = qtdEncanado * 2.02; // Aproximadamente 2.02 kg de CO2 por m³ de gás natural
+    }
+  }
+
+  // Calcula a emissão anual
+  emissaoAnual = emissaoMensal * 12;
+
+  // Exibe os resultados
+  document.getElementById("resultado-gas").textContent = `Emissão Mensal: ${emissaoMensal.toFixed(2)} kg CO₂`;
+  document.getElementById("resultado-gas-anual").textContent = `Emissão Anual: ${emissaoAnual.toFixed(2)} kg CO₂`;
+}
+
+function mostrarOpcaoGas() {
+  const tipoGas = document.getElementById("tipo-gas").value;
+  
+  if (tipoGas === "botijao") {
+    document.getElementById("input-botijao").style.display = "block";
+    document.getElementById("input-encanado").style.display = "none";
+  } else if (tipoGas === "encanado") {
+    document.getElementById("input-botijao").style.display = "none";
+    document.getElementById("input-encanado").style.display = "block";
+  }
+}
+
+function limparGas() {
+  // Limpa os inputs e resultados
+  document.getElementById("qtd-botijao").value = '';
+  document.getElementById("qtd-encanado").value = '';
+  document.getElementById("resultado-gas-mensal").textContent = '';
+  document.getElementById("resultado-gas-anual").textContent = '';
+}
+
+
+</script>
 </head>
 <body>
   <header>
@@ -225,6 +275,34 @@ function limparGas() {
       <p id="resultado-gas-anual"></p>
     </div>
     
+    <div class="calculadora" id="gas-cozinha-calculo">
+      <h2>Gás de Cozinha</h2>
+      
+      <label for="tipo-gas">Tipo de Gás:</label>
+      <select id="tipo-gas" onchange="mostrarOpcaoGas()">
+        <option value="botijao">Botijão (13kg)</option>
+        <option value="encanado">Gás Encanado (m³/mês)</option>
+      </select>
+    
+      <!-- Input para cálculo com botijão -->
+      <div id="input-botijao">
+        <label for="qtd-botijao">Quantidade de botijões por mês:</label>
+        <input type="number" id="qtd-botijao" placeholder="Informe a quantidade">
+      </div>
+    
+      <!-- Input para cálculo com gás encanado -->
+      <div id="input-encanado" style="display: none;">
+        <label for="qtd-encanado">Consumo em m³/mês:</label>
+        <input type="number" id="qtd-encanado" placeholder="Informe o consumo">
+      </div>
+    
+      <button onclick="calcularGas()">Calcular</button>
+      <button onclick="limparGas()">Limpar</button>
+      <p id="resultado-gas"></p>
+      <p id="resultado-gas-mensal"></p>
+      <p id="resultado-gas-anual"></p>
+    </div>
+    
     <div class="calculadora" id="energia-calculo">
       <h2>Energia Elétrica</h2>
       
@@ -257,6 +335,7 @@ function limparGas() {
     </div>
   </div>
 
+
     
   <div class="emissao-container calculadora-container">
     <div class="calculadora" id="emissao-total">
@@ -266,6 +345,10 @@ function limparGas() {
     
     <div class = "button-voltar ">
       <button onclick="window.location.href='index.html'">Voltar à Página Inicial</button>
+    </div>
+
+    <div class= "button-excluir">
+      <button onclick="//adicinar a função">Excluir Dados</button>
     </div>
 
     <!-- Tem que centralizar -->
@@ -278,8 +361,24 @@ function limparGas() {
         <p class="resul-compensacao">0 árvores por ano</p>
     </div>
   </div>
+    </div>
+  </div>
 </div>
   
+<script>
+  // Exibe o campo apropriado com base na opção selecionada
+  document.querySelectorAll('input[name="tipo-energia"]').forEach((elem) => {
+    elem.addEventListener('change', function(event) {
+      if (event.target.value === 'valor-conta') {
+        document.getElementById('input-valor-conta').style.display = 'block';
+        document.getElementById('input-kwh').style.display = 'none';
+      } else {
+        document.getElementById('input-valor-conta').style.display = 'none';
+        document.getElementById('input-kwh').style.display = 'block';
+      }
+    });
+  });
+</script>
 <script>
   // Exibe o campo apropriado com base na opção selecionada
   document.querySelectorAll('input[name="tipo-energia"]').forEach((elem) => {
