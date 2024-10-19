@@ -3,9 +3,7 @@ from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 import math
 
-from .models import Carro, Energia
-
-
+from .models import Carro, Energia, Onibus, Gas
 
 def index(request):
     return render(request, 'carbono/index.html')
@@ -22,10 +20,9 @@ def arvores(co):
     arvore = co / absorcao_co2
     return arvore
 
-
-def carro(km_por_mes_str, carro_obj):
-    km_por_mes = float(km_por_mes_str)
-    emissao = km_por_mes * carro_obj.consumo * carro_obj.emissao 
+def carro(km_por_mes, carro_obj):
+    km_por_mes = float(km_por_mes)
+    emissao = (km_por_mes / carro_obj.consumo) * carro_obj.emissao
     credito = emissao / 1000
     anual = credito * 12
     
@@ -52,12 +49,9 @@ def energia_reais(valor_da_conta, energia_obj):
     
     return (credito, anual)
 
-
-# VvV Para Pedro, insira as funções aqui VvV
-
-def onibus(km_por_mes_str, onibus_obj):
-    km_por_mes = float (km_por_mes_str)
-    emissao = km_por_mes * carro_obj.emissao * carro_obj.consumo * 40
+def onibus(km_por_mes_onibus):
+    km_por_mes_onibus = float(km_por_mes_onibus)
+    emissao = (km_por_mes_onibus / 2.63) * 2.8 / 40  # Média de 40 passageiros por ônibus
     credito = (emissao / 1000)
     anual = credito * 12
 
@@ -65,15 +59,15 @@ def onibus(km_por_mes_str, onibus_obj):
 
 
 def gas_botijao(botijao, gas_obj):
-    valor_do_botijão = float(botijao) 
-    credito = (valor_do_botijão * 40.15) / 1000
+    botijao = float(botijao) 
+    credito = (botijao * 40.15) / 1000
     anual = credito * 12
 
     return (credito, anual)
- 
 
+ 
 def gas_encanado(area, gas_obj):
-    area = float (area) 
+    area = float(area) 
     credito = (area * 1.997) / 1000
     anual = credito * 12
 
@@ -83,21 +77,22 @@ def gas_encanado(area, gas_obj):
 def teste(request):
     carros = Carro.objects.all()
     energias = Energia.objects.all()
-    # Adicionar variável para pegar objetos de Ônibus, modelos à criar
-    # Adicionar variável para pegar objetos de Gás, modelos à criar
+    gases = Gas.objects.all()
 
-    
     if 'carro_resultado' not in request.session:
         request.session['carro_resultado'] = None
     if 'energia_resultado' not in request.session:
         request.session['energia_resultado'] = None
-    # Condição para armazenamento de input de Ônibus
-    # Confição para armazenamento de input de Gas
+    if 'onibus_resultado' not in request.session:
+        request.session['onibus_resultado'] = None
+    if 'gas_resultado' not in request.session:
+        request.session['gas_resultado'] = None
 
     carro_resultado = request.session['carro_resultado']
     energia_resultado = request.session['energia_resultado']
-    # Variável para resultado de Ônibus
-    # Variável para resultado de Gás
+    onibus_resultado = request.session['onibus_resultado']
+    gas_resultado = request.session['gas_resultado']
+    
     total_anual = 0
     arvores_necessarias = 0
     valor_tonelada = 0
@@ -106,6 +101,11 @@ def teste(request):
         carro_tipo = request.POST.get('carro_tipo')
         km_por_mes = request.POST.get('km_por_mes')
         energia_tipo = request.POST.get('energia_tipo')
+
+        km_por_mes_onibus = request.POST.get('km_por_mes_onibus')
+        gas_tipo = request.POST.get('gas_tipo')
+        botijao_gas = request.POST.get('botijao_gas')
+        volume_gas = request.POST.get('volume_gas')
 
         if carro_tipo and km_por_mes:
             try:
@@ -147,22 +147,49 @@ def teste(request):
             except ObjectDoesNotExist:
                 energia_resultado = {'error': 'Erro: Tipo de energia não encontrado.'}
                 
-        # Condição para Ônibus, pode utilizar carro_tipo and km_por_mes como modelo de algoritmo
-            # Algoritmo ônibus
+        if km_por_mes_onibus:
+            try:
+                km_por_mes_onibus = float(km_por_mes_onibus)
+                if km_por_mes_onibus < 0:
+                    raise ValueError('Km por mês não pode ser negativo.')
+                credito, anual = onibus(km_por_mes_onibus)
+                onibus_resultado = {'credito': round(credito, 3), 'anual': round(anual, 3)}
+                request.session['onibus_resultado'] = onibus_resultado
+            except ValueError as e:
+                return HttpResponse(str(e), status=400)
+            except ObjectDoesNotExist:
+                onibus_resultado = {'error': 'Erro: Tipo de ônibus não encontrado.'}
         
-        # Confição para Gás, pode utilizar energia_tipo como modelo de algoritmo (Sugiro utilizar o mesmo try/except que está no energia)
-            # Condição para caso usuário selecione botijão
-                # Algoritmo Gás Botijão
-        
-            # Condição para caso usupario selecione gás encanado
-                # Algoritmo Gás Encanado
+        if gas_tipo:
+            try:
+                gas_obj = Gas.objects.get(modo_de_calculo=gas_tipo)
+                if gas_tipo == 'Botijão' and botijao_gas:
+                    botijao_gas = float(botijao_gas)
+                    if botijao_gas < 0:
+                        raise ValueError('Botijão de gás não pode ser negativo.')
+                    credito, anual = gas_botijao(botijao_gas, gas_obj)
+                    gas_resultado = {'credito': round(credito, 3), 'anual': round(anual, 3)}
+                    request.session['gas_resultado'] = gas_resultado
+                elif gas_tipo == 'Encanado' and volume_gas:
+                    volume_gas = float(volume_gas)
+                    if volume_gas < 0:
+                        raise ValueError('Volume de gás não pode ser negativo.')
+                    credito, anual = gas_encanado(volume_gas, gas_obj)
+                    gas_resultado = {'credito': round(credito, 3), 'anual': round(anual, 3)}
+                    request.session['gas_resultado'] = gas_resultado
+                else:
+                    gas_resultado = {'error': 'Erro: Nenhum valor válido foi fornecido para o cálculo de gás.'}
+            except ObjectDoesNotExist:
+                gas_resultado = {'error': 'Erro: Tipo de gás não encontrado.'}
 
     if carro_resultado and 'anual' in carro_resultado:
         total_anual += carro_resultado['anual']
     if energia_resultado and 'anual' in energia_resultado:
         total_anual += energia_resultado['anual']
-    # Adicionar condição para Ônibus
-    # Adicionar condição para Gás
+    if onibus_resultado and 'anual' in onibus_resultado:
+        total_anual += onibus_resultado['anual']
+    if gas_resultado and 'anual' in gas_resultado:
+        total_anual += gas_resultado['anual']
 
     if total_anual > 0:        
         arvores_necessarias = math.ceil(arvores(total_anual))
@@ -171,18 +198,20 @@ def teste(request):
     return render(request, 'carbono/teste.html', {
         'carro_resultado': carro_resultado,
         'energia_resultado': energia_resultado,
-        # Adicionar o dicionário para onibus_resultado,
-        # Adicionar o dicionário para gas_resultado,
+        'onibus_resultado': onibus_resultado,
+        'gas_resultado': gas_resultado,
         'total_anual': round(total_anual, 3),
         'arvores_necessarias': arvores_necessarias,
         'valor_tonelada': valor_tonelada,
         'carros': carros,
         'energias': energias,
+        'onibus': onibus,
+        'gases': gases,
     })
 
 def limpar_sessao(request):
     request.session['carro_resultado'] = None
     request.session['energia_resultado'] = None
-    # Adicionar o clear para Ônibus
-    # Adicionar o clear para Gás
+    request.session['onibus_resultado'] = None
+    request.session['gas_resultado'] = None
     return redirect('teste')

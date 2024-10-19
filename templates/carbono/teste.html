@@ -72,14 +72,65 @@
     {% endif %}
   </div>
 
-  {% comment "" %}
-  Aqui pode colocar divs com o cálculo de Ônibus, semelhante ao Carros,
-  Não precisa inserir código Django ainda, pode colocar o HTML puro
+  <div class="container">
+    <h2>Cálculo para Ônibus</h2>
+    <p>Tipo de Ônibus: Ônibus Padrão</p>
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="onibus_tipo" value="padrao">
+      <div class="form-group">
+        <label for="km_por_mes_onibus">Km por mês:</label>
+        <input type="number" id="km_por_mes_onibus" name="km_por_mes_onibus" class="form-control" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Calcular</button>
+    </form>
+  
+    {% if onibus_resultado %}
+      <p>Crédito de Carbono Mensal: {{ onibus_resultado.credito }} tco<sub>2</sub></p>
+      <p>Crédito de Carbono Anual: {{ onibus_resultado.anual }} tco<sub>2</sub></p>
+    {% endif %}
+  </div>
 
-  Também inserir as divs para Gás, semelhante ao energia,
-  Pode usar também o JavaScript com lógica para as opções
-  {% endcomment %}
-
+  <div class="container">
+    <h2>Cálculo para Gás</h2>
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="gas_tipo">Tipo de Gás:</label>
+        <div id="gas_tipo">
+          <div>
+            <input type="radio" id="gas_botijao" name="gas_tipo" value="Botijão" class="form-check-input" onchange="mostrarInputGas()">
+            <label for="gas_botijao" class="form-check-label">Botijão</label>
+          </div>
+          <div>
+            <input type="radio" id="gas_volume" name="gas_tipo" value="Volume" class="form-check-input" onchange="mostrarInputGas()">
+            <label for="gas_volume" class="form-check-label">Volume</label>
+          </div>
+        </div>
+      </div>
+  
+      <div id="input_botijao" style="display: none;">
+        <div class="form-group">
+          <label for="botijao_gas">Quantidade de Botijões:</label>
+          <input type="number" id="botijao_gas" name="botijao_gas" class="form-control" required>
+        </div>
+      </div>
+  
+      <div id="input_volume" style="display: none;">
+        <div class="form-group">
+          <label for="volume_gas">Volume de Gás:</label>
+          <input type="number" id="volume_gas" name="volume_gas" class="form-control" required>
+        </div>
+      </div>
+  
+      <button type="submit" class="btn btn-primary">Calcular</button>
+    </form>
+  
+    {% if gas_resultado %}
+      <p>Crédito de Carbono Mensal: {{ gas_resultado.credito }} tco<sub>2</sub></p>
+      <p>Crédito de Carbono Anual: {{ gas_resultado.anual }} tco<sub>2</sub></p>
+    {% endif %}
+  </div>
 
   {% if total_anual %}
   <div class="container">
@@ -108,36 +159,63 @@
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // JavaScript para controlar visibilidade dos inputs
-  const energiaTipoRadios = document.querySelectorAll('input[name="energia_tipo"]');
-  const kwhInput = document.getElementById('kwh_input');
-  const contaInput = document.getElementById('conta_input');
-  const kwhInputField = document.getElementById('kwh_usado');
-  const contaInputField = document.getElementById('valor_da_conta');
-
-  energiaTipoRadios.forEach((radio) => {
-    radio.addEventListener('change', () => {
-      console.log(`Radio button changed: ${radio.value}`);
-      if (radio.value === 'Kwh') {
-        kwhInput.style.display = 'block';
-        contaInput.style.display = 'none';
-        kwhInputField.disabled = false;
-        contaInputField.disabled = true;
-      } else if (radio.value === 'Conta de Luz') {
-        kwhInput.style.display = 'none';
-        contaInput.style.display = 'block';
-        kwhInputField.disabled = true;
-        contaInputField.disabled = false;
-      } else {
-        kwhInput.style.display = 'none'; 
-        contaInput.style.display = 'none';
-        kwhInputField.disabled = true;
-        contaInputField.disabled = true;
-      }
+  document.addEventListener('DOMContentLoaded', function() {
+    // JavaScript para controlar visibilidade dos inputs de energia
+    const energiaTipoRadios = document.querySelectorAll('input[name="energia_tipo"]');
+    const kwhInput = document.getElementById('kwh_input');
+    const contaInput = document.getElementById('conta_input');
+    const kwhInputField = document.getElementById('kwh_usado');
+    const contaInputField = document.getElementById('valor_da_conta');
+  
+    energiaTipoRadios.forEach((radio) => {
+      radio.addEventListener('change', () => {
+        if (radio.value === 'Kwh') {
+          kwhInput.style.display = 'block';
+          contaInput.style.display = 'none';
+          kwhInputField.disabled = false;
+          contaInputField.disabled = true;
+        } else if (radio.value === 'Conta de Luz') {
+          kwhInput.style.display = 'none';
+          contaInput.style.display = 'block';
+          kwhInputField.disabled = true;
+          contaInputField.disabled = false;
+        } else {
+          kwhInput.style.display = 'none'; 
+          contaInput.style.display = 'none';
+          kwhInputField.disabled = true;
+          contaInputField.disabled = true;
+        }
+      });
+    });
+  
+    // JavaScript para controlar visibilidade dos inputs de gás
+    const gasTipoRadios = document.querySelectorAll('input[name="gas_tipo"]');
+    const botijaoInput = document.getElementById('input_botijao');
+    const volumeInput = document.getElementById('input_volume');
+    const botijaoInputField = document.getElementById('botijao_gas');
+    const volumeInputField = document.getElementById('volume_gas');
+  
+    gasTipoRadios.forEach((radio) => {
+      radio.addEventListener('change', () => {
+        if (radio.value === 'Botijão') {
+          botijaoInput.style.display = 'block';
+          volumeInput.style.display = 'none';
+          botijaoInputField.disabled = false;
+          volumeInputField.disabled = true;
+        } else if (radio.value === 'Volume') {
+          botijaoInput.style.display = 'none';
+          volumeInput.style.display = 'block';
+          botijaoInputField.disabled = true;
+          volumeInputField.disabled = false;
+        } else {
+          botijaoInput.style.display = 'none'; 
+          volumeInput.style.display = 'none';
+          botijaoInputField.disabled = true;
+          volumeInputField.disabled = true;
+        }
+      });
     });
   });
-});
 </script>
 
 {% endblock %}
