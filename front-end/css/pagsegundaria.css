@@ -166,7 +166,7 @@ button:hover {
   background-color: #5DBB8A; 
 }
 
-.button-voltar {
+.button-voltar .button-excluir {
   text-align: center; 
   margin-top: 20px;
   align-content: center;
