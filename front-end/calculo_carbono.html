@@ -248,34 +248,7 @@ function limparGas() {
       <p id="resultado-onibus-mensal"></p>
       <p id="resultado-onibus-anual"></p>
     </div>
-    <div class="calculadora" id="gas-cozinha-calculo">
-      <h2>Gás de Cozinha</h2>
-      
-      <label for="tipo-gas">Tipo de Gás:</label>
-      <select id="tipo-gas" onchange="mostrarOpcaoGas()">
-        <option value="botijao">Botijão (13kg)</option>
-        <option value="encanado">Gás Encanado (m³/mês)</option>
-      </select>
-    
-      <!-- Input para cálculo com botijão -->
-      <div id="input-botijao">
-        <label for="qtd-botijao">Quantidade de botijões por mês:</label>
-        <input type="number" id="qtd-botijao" placeholder="Informe a quantidade">
-      </div>
-    
-      <!-- Input para cálculo com gás encanado -->
-      <div id="input-encanado" style="display: none;">
-        <label for="qtd-encanado">Consumo em m³/mês:</label>
-        <input type="number" id="qtd-encanado" placeholder="Informe o consumo">
-      </div>
-    
-      <button onclick="calcularGas()">Calcular</button>
-      <button onclick="limparGas()">Limpar</button>
-      <p id="resultado-gas"></p>
-      <p id="resultado-gas-mensal"></p>
-      <p id="resultado-gas-anual"></p>
-    </div>
-    
+
     <div class="calculadora" id="gas-cozinha-calculo">
       <h2>Gás de Cozinha</h2>
       
@@ -346,10 +319,6 @@ function limparGas() {
     
     <div class = "button-voltar ">
       <button onclick="window.location.href='index.html'">Voltar à Página Inicial</button>
-    </div>
-
-    <div class= "button-excluir">
-      <button onclick="//adicinar a função">Excluir Dados</button>
     </div>
 
     <!-- Tem que centralizar -->
