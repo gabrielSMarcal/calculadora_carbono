@@ -208,10 +208,12 @@ def teste(request):
         'onibus': onibus,
         'gases': gases,
     })
+    
 
 def limpar_sessao(request):
     request.session['carro_resultado'] = None
     request.session['energia_resultado'] = None
     request.session['onibus_resultado'] = None
     request.session['gas_resultado'] = None
+    request.session.flush()
     return redirect('teste')
