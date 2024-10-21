@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Créditos de Carbono</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="style/style.css">
   <script src="js(s)/interacao.js"></script>
 </head>
 <body>
@@ -21,7 +21,7 @@
       </nav>
     </div>
   </header>
-
+  <!-- A imagem não está renderizando por algum motivo que não faço ideia :). Pode ser a minha máquina, quando teste me avisa   -->
   <section class="hero">
     <div class="hero-content">
       <h2>Reduzindo a Pegada de Carbono</h2>
@@ -35,8 +35,6 @@
     <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod quae tenetur eveniet est voluptates esse harum rem, optio at expedita, id, praesentium doloremque pariatur commodi dolor neque perferendis. Dolorum rem, laudantium perferendis nesciunt a odit, deserunt quae fugit hic aut culpa eum. Iste sapiente illo consequuntur dolorem porro doloremque explicabo, neque provident blanditiis possimus ea, quae ullam rerum numquam delectus, libero deserunt asperiores error reiciendis. Ab suscipit obcaecati illo, pariatur saepe fugiat nesciunt voluptatum architecto quas! Eligendi ratione iste placeat voluptate sint reiciendis. Alias voluptatem totam enim rerum explicabo exercitationem aliquid quae magnam ab qui, ea maiores porro possimus, ipsa, molestiae mollitia iusto. Id deserunt earum nihil praesentium ullam cupiditate a molestias voluptatum, quos eos quas perferendis odio suscipit nobis ut nam nulla distinctio rem repellendus atque iure eum accusantium illo. Atque animi ducimus illo harum molestiae autem repellat totam eos commodi optio. Illum, enim aut odio rem sequi dignissimos dicta ea praesentium dolorem laboriosam quos vero! Architecto laboriosam, totam assumenda aut corporis atque? Assumenda commodi, eveniet magni accusantium sed cupiditate quasi at iste aperiam fuga rerum.</p>
 
   </section>
-
-  
 
   <section id="beneficios" class="container cards">
     <div class="card">
@@ -75,37 +73,22 @@
   
   <section id="botton" class="botoes">
     <button id="carro-a" class="funcionam">
-      <img src="css/pictures/pngwing.com (1).png" alt="Carro a álcool" class="btn-image">
+      <img src="assets/pngwing.com (1).png" alt="Carro a álcool" class="btn-image">
       <p>Carro a álcool</p> 
     </button>
     <button id="carro-g" class="funcionam">
-      <img src="css/pictures/pngwing.com (2).png" alt="carro a gasolina" class="btn-image">
+      <img src="assets/pngwing.com (2).png" alt="carro a gasolina" class="btn-image">
       <p>Carro a gasolina</p> 
     </button>
     <button id="onibus" class="funcionam">
-      <img src="css/pictures/pngwing.com (2).png" alt="onibus" class="btn-image">
+      <img src="assets/pngwing.com (2).png" alt="onibus" class="btn-image">
       <p>transporte Público</p> 
     </button>
     <button id="energia" class="funcionam">
-      <img src="css/pictures/eco-friendly-recycling-concept.png" alt="Tomada elétrica" class="btn-image">
+      <img src="assets/eco-friendly-recycling-concept.png" alt="Tomada elétrica" class="btn-image">
       <p>Energia elétrica</p>
     </button>
   </section>
-
-  <script>
-    // Seleciona todos os botões com a classe 'funcionam'
-    const botoes = document.querySelectorAll('.funcionam');
-
-    // Adiciona evento de clique a cada botão
-    botoes.forEach((botao) => {
-      botao.addEventListener('click', () => {
-        const tipo = botao.id; // Pega o ID do botão clicado
-        window.location.href = `calculo_carbono.html?tipo=${tipo}`; // Redireciona para a página de cálculo
-      });
-    });
-  </script>
-
-
   
   <section id="faq" class="container">
     <h2>FAQ</h2>
@@ -118,8 +101,6 @@
         <p>dfmsofmds</p>
     </details>
   </section>
-
-  
 
 
   <footer>
