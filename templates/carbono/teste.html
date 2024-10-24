@@ -1,221 +1,139 @@
-{% extends 'carbono/base.html' %}
-{% load static %}
-{% block content %}
-<div class='center'>
-  <h1>Calculadora de Carbono</h1>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cálculo de Carbono</title>
+  <link rel="stylesheet" href="style/pagsegundaria.css">
+  <script src="js(s)/calculo.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Cálculo de Emissão de Carbono</h1>
+  </header>
 
-  <div class="container">
-    <h2>Cálculo para Carro</h2>
-    <form method="post">
-      {% csrf_token %}
-      <div class="form-group">
-        <label for="carro_tipo">Tipo de Carro:</label>
-        <select id="carro_tipo" name="carro_tipo" class="form-control">
-          <option value="">Selecione o tipo de carro</option>
-          {% for carro in carros %}
-          <option value="{{ carro.tipo }}">{{ carro.tipo }}</option>
-          {% endfor %}
-        </select>
+  <div class="calculadora-container">
+    <div class="calculadora" id="carro-calculo">
+      <h2>Carro</h2>
+      <label for="tipo-carro">Tipo de Carro:</label>
+      <select id="tipo-carro">
+        <option value="alcool">Álcool</option>
+        <option value="gasolina">Gasolina</option>
+      </select>
+      
+      <label for="km-carro">Km percorridos:</label>
+      <input type="number" id="km-carro" placeholder="Informe os km">
+      <button onclick="calcularCarro()">Calcular</button>
+      <button type="button" onclick="limparCarro()">Limpar</button>
+      <p id="resultado-carro"></p>
+      <p id="resultado-carro-mensal"></p>
+      <p id="resultado-carro-anual"></p>
+    </div>
+
+    <div class="calculadora" id="onibus-calculo">
+      <h2>Transporte Público - Ônibus</h2>
+    
+      <!-- Input para os km percorridos -->
+      <div>
+        <label for="km-onibus">Km percorridos:</label>
+        <input type="number" id="km-onibus" placeholder="Informe os km">
       </div>
+      
+      <!-- Botões -->
+      <button onclick="calcularTransportePublico()">Calcular</button>
+      <button type="button" onclick="limparTransporte()">Limpar</button>
+      
+      <!-- Resultados -->
+      <p id="resultado-onibus-mensal"></p>
+      <p id="resultado-onibus-anual"></p>
+    </div>
 
-      <div class="form-group">
-        <label for="km_por_mes">Km por mês:</label>
-        <input type="number" id="km_por_mes" name="km_por_mes" class="form-control" required>
+    <div class="calculadora" id="gas-cozinha-calculo">
+      <h2>Gás de Cozinha</h2>
+      
+      <label for="tipo-gas">Tipo de Gás:</label>
+      <select id="tipo-gas" onchange="mostrarOpcaoGas()">
+        <option value="botijao">Botijão (13kg)</option>
+        <option value="encanado">Gás Encanado (m³/mês)</option>
+      </select>
+    
+      <!-- Input para cálculo com botijão -->
+      <div id="input-botijao">
+        <label for="qtd-botijao">Quantidade de botijões por mês:</label>
+        <input type="number" id="qtd-botijao" placeholder="Informe a quantidade">
       </div>
-
-      <button type="submit" class="btn btn-primary">Calcular</button>
-    </form>
-
-    {% if carro_resultado %}
-        <p><b>Resultado:</b></p>
-        <p>Crédito de Carbono Mensal: {{ carro_resultado.credito }} tco<sub>2</sub></p>
-        <p>Crédito de Carbono Anual: {{ carro_resultado.anual }} tco<sub>2</sub></p>
-    {% endif %}
+    
+      <!-- Input para cálculo com gás encanado -->
+      <div id="input-encanado" style="display: none;">
+        <label for="qtd-encanado">Consumo em m³/mês:</label>
+        <input type="number" id="qtd-encanado" placeholder="Informe o consumo">
+    
+      </div>
+    
+      <button onclick="calcularGas()">Calcular</button>
+      <button onclick="limparGas()">Limpar</button>
+      <p id="resultado-gas"></p>
+      <p id="resultado-gas-mensal"></p>
+      <p id="resultado-gas-anual"></p>
+    </div>
+    
+    <div class="calculadora" id="energia-calculo">
+      <h2>Energia Elétrica</h2>
+      
+      <!-- Select para tipo de cálculo -->
+      <label for="tipo-energia">Tipo de Cálculo:</label>
+      <select id="tipo-energia" onchange="exibirInputEnergia()">
+        <option value="valor-conta">Valor da Conta</option>
+        <option value="kwh">kWh/mês</option>
+      </select>
+      
+      <!-- Input para valor da conta -->
+      <div id="input-valor-conta">
+        <label for="valor-conta">Valor da Conta (R$):</label>
+        <input type="number" id="valor-conta-input" placeholder="Informe o valor da conta">
+      </div>
+      
+      <!-- Input para kWh consumidos -->
+      <div id="input-kwh" style="display: none;">
+        <label for="kwh-consumidos">Consumo em kWh:</label>
+        <input type="number" id="kwh-consumidos-input" placeholder="Informe o consumo">
+      </div>
+    
+      <!-- Botões -->
+      <button onclick="calcularEnergia()">Calcular</button>
+      <button type="button" onclick="limparEnergia()">Limpar</button>
+      
+      <!-- Resultados -->
+      <p id="resultado-energia-mensal"></p>
+      <p id="resultado-energia-anual"></p>
+    </div>
   </div>
 
-  <div class="container">
-    <h2>Cálculo para Energia</h2>
-    <form method="post">
-      {% csrf_token %}
-      <div class="form-group">
-        <label for="energia_tipo">Tipo de Energia:</label>
-        <div id="energia_tipo">
-          {% for energia in energias %}
-            <div>
-              <input type="radio" id="energia_{{ forloop.counter }}" name="energia_tipo" value="{{ energia.modo_de_calculo }}" class="form-check-input">
-              <label for="energia_{{ forloop.counter }}" class="form-check-label">{{ energia.legenda }}</label>
-            </div>
-          {% endfor %}
-        </div>
-      </div>
 
-      <div id="kwh_input" style="display: none;">
-        <div class="form-group">
-          <label for="kwh_usado">kWh Usado:</label>
-          <input type="number" id="kwh_usado" name="kwh_usado" class="form-control" required>
-        </div>
-      </div>
+    
+  <div class="emissao-container calculadora-container">
+    <div class="calculadora" id="emissao-total">
+        <h3>Total de emissão:</h3>
+        <p>0.00 kg CO₂</p>
+    </div>
+    
+    <div class = "button-voltar ">
+      <button onclick="window.location.href='index.html'">Voltar à Página Inicial</button>
+    </div>
 
-      <div id="conta_input" style="display: none;">
-        <div class="form-group">
-          <label for="valor_da_conta">Valor da Conta de Luz:</label>
-          <input type="number" id="valor_da_conta" name="valor_da_conta" class="form-control" required>
-        </div>
-      </div>
+    <!-- Tem que centralizar -->
+    <div class= "button-excluir">
+      <button onclick="//adicinar a função">Excluir Dados</button>
+    </div>
 
-      <button type="submit" class="btn btn-primary">Calcular</button>
-    </form>
-
-    {% if energia_resultado %}
-      <p>Crédito de Carbono Mensal: {{ energia_resultado.credito }} tco<sub>2</sub></p>
-      <p>Crédito de Carbono Anual: {{ energia_resultado.anual }} tco<sub>2</sub></p>
-    {% endif %}
+    <div class="calculadora" id="compensacao">
+        <h3>Compensação necessária:</h3>
+        <p class="resul-compensacao">0 árvores por ano</p>
+    </div>
   </div>
-
-  <div class="container">
-    <h2>Cálculo para Ônibus</h2>
-    <p>Tipo de Ônibus: Ônibus Padrão</p>
-    <form method="post">
-      {% csrf_token %}
-      <input type="hidden" name="onibus_tipo" value="padrao">
-      <div class="form-group">
-        <label for="km_por_mes_onibus">Km por mês:</label>
-        <input type="number" id="km_por_mes_onibus" name="km_por_mes_onibus" class="form-control" required>
-      </div>
-      <button type="submit" class="btn btn-primary">Calcular</button>
-    </form>
-  
-    {% if onibus_resultado %}
-      <p>Crédito de Carbono Mensal: {{ onibus_resultado.credito }} tco<sub>2</sub></p>
-      <p>Crédito de Carbono Anual: {{ onibus_resultado.anual }} tco<sub>2</sub></p>
-    {% endif %}
-  </div>
-
-  <div class="container">
-    <h2>Cálculo para Gás</h2>
-    <form method="post">
-      {% csrf_token %}
-      <div class="form-group">
-        <label for="gas_tipo">Tipo de Gás:</label>
-        <div id="gas_tipo">
-          <div>
-            <input type="radio" id="gas_botijao" name="gas_tipo" value="Botijão" class="form-check-input" onchange="mostrarInputGas()">
-            <label for="gas_botijao" class="form-check-label">Botijão</label>
-          </div>
-          <div>
-            <input type="radio" id="gas_volume" name="gas_tipo" value="Volume" class="form-check-input" onchange="mostrarInputGas()">
-            <label for="gas_volume" class="form-check-label">Volume</label>
-          </div>
-        </div>
-      </div>
-  
-      <div id="input_botijao" style="display: none;">
-        <div class="form-group">
-          <label for="botijao_gas">Quantidade de Botijões:</label>
-          <input type="number" id="botijao_gas" name="botijao_gas" class="form-control" required>
-        </div>
-      </div>
-  
-      <div id="input_volume" style="display: none;">
-        <div class="form-group">
-          <label for="volume_gas">Volume de Gás:</label>
-          <input type="number" id="volume_gas" name="volume_gas" class="form-control" required>
-        </div>
-      </div>
-  
-      <button type="submit" class="btn btn-primary">Calcular</button>
-    </form>
-  
-    {% if gas_resultado %}
-      <p>Crédito de Carbono Mensal: {{ gas_resultado.credito }} tco<sub>2</sub></p>
-      <p>Crédito de Carbono Anual: {{ gas_resultado.anual }} tco<sub>2</sub></p>
-    {% endif %}
-  </div>
-
-  {% if total_anual %}
-  <div class="container">
-    <h2>Resultado Total</h2>
-    <p>Total Anual: {{ total_anual }} toneladas</p>
-    <p>Árvores necessárias: {{ arvores_necessarias }} árvores</p>
-    <p>Valor da tonelada: R$ {{ valor_tonelada }}</p>
-  </div>
-  {% endif %}
-
-  <div class="container">
-    <form method="post" action="{% url 'limpar_sessao' %}">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-danger">Limpar Resultados</button>
-    </form>
+    </div>
   </div>
 </div>
 
-<style>
-  .center {
-    margin: auto;
-    width: 60%;
-    border: 3px solid #a5addb;
-    padding: 10px;
-  }
-</style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // JavaScript para controlar visibilidade dos inputs de energia
-    const energiaTipoRadios = document.querySelectorAll('input[name="energia_tipo"]');
-    const kwhInput = document.getElementById('kwh_input');
-    const contaInput = document.getElementById('conta_input');
-    const kwhInputField = document.getElementById('kwh_usado');
-    const contaInputField = document.getElementById('valor_da_conta');
-  
-    energiaTipoRadios.forEach((radio) => {
-      radio.addEventListener('change', () => {
-        if (radio.value === 'Kwh') {
-          kwhInput.style.display = 'block';
-          contaInput.style.display = 'none';
-          kwhInputField.disabled = false;
-          contaInputField.disabled = true;
-        } else if (radio.value === 'Conta de Luz') {
-          kwhInput.style.display = 'none';
-          contaInput.style.display = 'block';
-          kwhInputField.disabled = true;
-          contaInputField.disabled = false;
-        } else {
-          kwhInput.style.display = 'none'; 
-          contaInput.style.display = 'none';
-          kwhInputField.disabled = true;
-          contaInputField.disabled = true;
-        }
-      });
-    });
-  
-    // JavaScript para controlar visibilidade dos inputs de gás
-    const gasTipoRadios = document.querySelectorAll('input[name="gas_tipo"]');
-    const botijaoInput = document.getElementById('input_botijao');
-    const volumeInput = document.getElementById('input_volume');
-    const botijaoInputField = document.getElementById('botijao_gas');
-    const volumeInputField = document.getElementById('volume_gas');
-  
-    gasTipoRadios.forEach((radio) => {
-      radio.addEventListener('change', () => {
-        if (radio.value === 'Botijão') {
-          botijaoInput.style.display = 'block';
-          volumeInput.style.display = 'none';
-          botijaoInputField.disabled = false;
-          volumeInputField.disabled = true;
-        } else if (radio.value === 'Volume') {
-          botijaoInput.style.display = 'none';
-          volumeInput.style.display = 'block';
-          botijaoInputField.disabled = true;
-          volumeInputField.disabled = false;
-        } else {
-          botijaoInput.style.display = 'none'; 
-          volumeInput.style.display = 'none';
-          botijaoInputField.disabled = true;
-          volumeInputField.disabled = true;
-        }
-      });
-    });
-  });
-</script>
-
-{% endblock %}
+</body>
+</html>

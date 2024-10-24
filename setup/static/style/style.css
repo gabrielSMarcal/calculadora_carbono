@@ -1,0 +1,293 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #e6e1e1;
+    color: #333;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #002f6c;
+    color: white;
+    padding: 15px 10%;
+}
+
+.navbar h1 {
+    font-size: 1.8rem;
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+}
+
+.navbar ul li {
+    margin-left: 20px;
+}
+
+.navbar ul li a {
+    font-style: none;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.navbar ul li a:hover {
+    text-decoration: none;
+}
+
+.hero {
+    /*A imagem não está renderizando por algum motivo que não faço ideia :). Pode ser a minha máquina, quando teste me avisa */
+    background-image: url('front-end/assets/ima2.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #ffffff;
+    text-align: right;
+    padding: 305px 3%;
+    position: relative;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.hero h2 {
+    font-size: 3.0rem;
+}
+
+.hero p {
+    font-size: 1.3rem;
+    margin: 20px 0;
+}
+
+.hero .btn {
+    padding: 10px 20px;
+    background-color: #007b5e;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.hero .btn:hover {
+    background-color: #005f46;
+}
+
+.container {
+    padding: 50px 10%;
+}
+
+.text {
+    margin-top: 20px;
+    background-color: #ffffff;
+    height: auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0.3, 0.3);
+    width: 45%;
+    margin-left: 170px;
+}
+
+p {
+    margin-top: 10px;
+}
+
+.cards {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0.3, 0.3);
+    width: 45%;
+}
+
+.card h3 {
+    margin-bottom: 10px;
+}
+
+.texto_informativo {
+    background-color: #467bc0;
+    padding: 20px 10%;
+    margin: 20px 0px;
+    height: auto;
+}
+
+.botoes {
+    display: flex;
+    justify-content: space-around; 
+    flex-wrap: wrap; 
+    padding: 20px; 
+    border-radius: 8px; 
+    
+}
+
+#botton {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap; 
+    gap: 20px; 
+    padding: 20px;
+}
+
+.funcionam {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    background-color: #4346ee; 
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 100px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; 
+    width: 200px; 
+}
+
+.funcionam:hover {
+    transform: translateY(-5px); 
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); 
+}
+
+.btn-image {
+    width: 100px; 
+    height: 100px;
+    margin-bottom: 10px; 
+}
+
+
+.botoes {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+}
+
+#ini_calc {
+    align-items: center;
+    text-align: center;
+}
+
+#ops_calc{
+    padding: 20px;
+    margin-left: 150px;
+}
+
+details {
+    margin: 10px 0;
+}
+
+footer {
+    background-color: #002f6c;
+    color: white;
+    padding: 20px 10%;
+}
+
+
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.btn:hover {
+    background-color: #005f46;
+    transform: scale(1.05);
+    transition: transform 0.2s ease;
+}
+
+
+.card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+
+.funcionam:hover {
+    background-color: #005f46;
+    transform: scale(1.05);
+    transition: transform 0.2s ease;
+}
+
+
+
+
+
+@media (max-width: 1024px) {
+    .navbar ul {
+        flex-direction: column;
+    }
+    .text, .card {
+        width: 100%;
+        margin: 10px 0;
+    }
+    .cards {
+        flex-direction: column;
+    }
+    .hero h2 {
+        font-size: 2.5rem;
+    }
+    .hero p {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero {
+        padding: 200px 5%;
+    }
+    .navbar h1 {
+        font-size: 1.5rem;
+    }
+    .text {
+        margin-left: 0;
+    }
+    .navbar ul {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar h1 {
+        font-size: 1.2rem;
+    }
+    .hero {
+        padding: 150px 5%;
+        text-align: center;
+    }
+    .hero h2 {
+        font-size: 2rem;
+    }
+    .hero p {
+        font-size: 1rem;
+    }
+    .navbar ul {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .cards {
+        flex-direction: column;
+    }
+}
+
