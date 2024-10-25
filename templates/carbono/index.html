@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Créditos de Carbono</title>
-  <link rel="stylesheet" href="style/style.css">
-  <script src="js(s)/interacao.js"></script>
+  <link rel="stylesheet" href="{% static 'style/style.css' %}">
+  <script src="{% static 'js(s)/interacao.js' %}"></script>
 </head>
 <body>
   <header>
@@ -73,25 +73,25 @@
   
   
   <section id="botton" class="botoes">
-    <button id="carro-a" class="funcionam">
+    <a href="{% url 'teste' %}"><button id="carro-a" class="funcionam">
       <img src="assets/pngwing.com (1).png" alt="Carro a álcool" class="btn-image">
       <p>Carro a álcool</p> 
-    </button>
-    <button id="carro-g" class="funcionam">
+    </button></a>
+    <a href="{% url 'teste' %}"><button id="carro-g" class="funcionam">
       <img src="assets/pngwing.com (2).png" alt="carro a gasolina" class="btn-image">
       <p>Carro a gasolina</p> 
-    </button>
+    </button></a>
     <button id="onibus" class="funcionam">
       <img src="assets/pngwing.com (2).png" alt="onibus" class="btn-image">
       <p>transporte Público</p> 
     </button>
-    <button id="energia" class="funcionam">
+    <a href="{% url 'teste' %}"><button id="energia" class="funcionam">
       <img src="assets/eco-friendly-recycling-concept.png" alt="Tomada elétrica" class="btn-image">
       <p>Energia elétrica</p>
-    </button>
+    </button></a>
   </section>
   
-  
+
   <section id="faq" class="container">
     <h2>FAQ</h2>
     <details>
@@ -109,6 +109,5 @@
     <p> © Aps - Unip - 2024 </p>
   </footer>
 
-  <script src="js(s)/redirecao.js"></script>
 </body>
 </html>

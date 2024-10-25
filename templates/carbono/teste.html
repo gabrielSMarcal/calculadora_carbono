@@ -1,11 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cálculo de Carbono</title>
-  <link rel="stylesheet" href="style/pagsegundaria.css">
-  <script src="js(s)/calculo.js"></script>
+  <link rel="stylesheet" href="{% static 'style/pagsegundaria.css' %}">
+  <script src="{% static 'js(s)/calculo.js' %}"></script>
 </head>
 <body>
   <header>
@@ -118,7 +119,7 @@
     </div>
     
     <div class = "button-voltar ">
-      <button onclick="window.location.href='index.html'">Voltar à Página Inicial</button>
+      <a href="{% url 'index' %}"><button>Voltar à Página Inicial</button></a>
     </div>
 
     <!-- Tem que centralizar -->

@@ -45,7 +45,7 @@ body {
 
 .hero {
     /*A imagem não está renderizando por algum motivo que não faço ideia :). Pode ser a minha máquina, quando teste me avisa */
-    background-image: url('front-end/assets/ima2.jpg');
+    background-image: url('../assets/ima2.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
