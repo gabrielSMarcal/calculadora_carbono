@@ -74,19 +74,19 @@
   
   <section id="botton" class="botoes">
     <a href="{% url 'teste' %}"><button id="carro-a" class="funcionam">
-      <img src="assets/pngwing.com (1).png" alt="Carro a álcool" class="btn-image">
+      <img src="{% static 'assets/pngwing.com (1).png' %}" alt="Carro a álcool" class="btn-image">
       <p>Carro a álcool</p> 
     </button></a>
     <a href="{% url 'teste' %}"><button id="carro-g" class="funcionam">
-      <img src="assets/pngwing.com (2).png" alt="carro a gasolina" class="btn-image">
+      <img src="{% static 'assets/pngwing.com (2).png' %}" alt="carro a gasolina" class="btn-image">
       <p>Carro a gasolina</p> 
     </button></a>
     <button id="onibus" class="funcionam">
-      <img src="assets/pngwing.com (2).png" alt="onibus" class="btn-image">
+      <img src="{% static 'assets/pngwing.com (2).png' %}" alt="onibus" class="btn-image">
       <p>transporte Público</p> 
     </button>
     <a href="{% url 'teste' %}"><button id="energia" class="funcionam">
-      <img src="assets/eco-friendly-recycling-concept.png" alt="Tomada elétrica" class="btn-image">
+      <img src="{% static 'assets/eco-friendly-recycling-concept.png' %}" alt="Tomada elétrica" class="btn-image">
       <p>Energia elétrica</p>
     </button></a>
   </section>
