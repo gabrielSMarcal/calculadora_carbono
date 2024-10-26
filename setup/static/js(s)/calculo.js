@@ -66,18 +66,6 @@ function exibirInputEnergia() {
   } else {
     inputValorConta.style.display = "none";
     inputKwh.style.display = "block";
-  }
-}
-
-//Calculo de energia
-function calcularEnergia() {
-  const tipoEnergia = document.getElementById('tipo-energia').value;
-  let emissaoTotal, emissaoMensal, emissaoAnual;
-  
-  // Cálculo baseado no valor da conta
-  if (tipoEnergia === "valor-conta") {
-    const valorConta = document.getElementById('valor-conta-input').value;
-    emissaoTotal = valorConta * 0.075; // Exemplo de cálculo para valor da conta
   } else {
     // Cálculo baseado no consumo em kWh
     const kwhConsumidos = document.getElementById('kwh-consumidos-input').value;
