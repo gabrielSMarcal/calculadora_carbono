@@ -1,0 +1,150 @@
+{% load static %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cálculo de Carbono</title>
+  <link rel="stylesheet" href="{% static 'style/pagsegundaria.css' %}">
+  <script src="{% static 'js(s)/calculo.js' %}"></script>
+</head>
+<body>
+  <header>
+    <h1>Cálculo de Emissão de Carbono</h1>
+  </header>
+
+  <div class="calculadora-container">
+    <!-- Calculadora Carro -->
+    <div class="calculadora" id="carro-calculo">
+      <h2>Carro</h2>
+      <form method="post">
+        {% csrf_token %}
+        <label for="tipo-carro">Tipo de Carro:</label>
+        <select id="tipo-carro" name="carro_tipo" class="form-control" onchange="salvarDados()">
+          <option value="">Selecione o tipo de carro</option>
+            {% for carro in carros %}
+            <option value="{{ carro.tipo }}">{{ carro.tipo }}</option>
+            {% endfor %}
+        </select>
+        
+        <label for="km-carro">Km percorridos:</label>
+        <input type="number" id="km-carro" name="km_por_mes" placeholder="Informe os km" step="0.01" min="0" onchange="salvarDados()">
+        <button type="submit">Calcular</button>
+        <button type="button" onclick="limparCarro()">Limpar</button>
+      </form>
+      {% if carro_resultado %}
+        <p id="resultado-carro-mensal">Crédito de Carbono Mensal: {{ carro_resultado.credito|format_number }} tCO<sub>2</sub></p>
+        <p id="resultado-carro-anual">Crédito de Carbono Anual: {{ carro_resultado.anual|format_number }} tCO<sub>2</sub></p>
+      {% endif %}
+    </div>
+
+    <!-- Calculadora Ônibus -->
+    <div class="calculadora" id="onibus-calculo">
+      <h2>Transporte Público - Ônibus</h2>
+      <form method="post">
+        {% csrf_token %}
+        <label for="km-onibus">Km percorridos:</label>
+        <input type="number" id="km-onibus" name="km_por_mes_onibus" placeholder="Informe os km" step="0.01" min="0" onchange="salvarDados()">
+        <button type="submit">Calcular</button>
+        <button type="button" onclick="limparTransporte()">Limpar</button>
+      </form>
+      {% if onibus_resultado %}
+        <p id="resultado-onibus-mensal">Crédito de Carbono Mensal: {{ onibus_resultado.credito|format_number }} tCO<sub>2</sub></p>
+        <p id="resultado-onibus-anual">Crédito de Carbono Anual: {{ onibus_resultado.anual|format_number }} tCO<sub>2</sub></p>
+      {% endif %}
+    </div>
+
+    <!-- Calculadora Gás -->
+    <div class="calculadora" id="gas-cozinha-calculo">
+      <h2>Gás de Cozinha</h2>
+      <form method="post">
+        {% csrf_token %}
+        <label for="tipo-gas">Tipo de Gás:</label>
+        <select id="tipo-gas" name="gas_tipo" onchange="mostrarOpcaoGas(); salvarDados()">
+          <option value="">Selecione o tipo de gás que utiliza</option>
+            {% for gas in gases %}
+            <option value="{{ gas.modo_de_calculo }}">{{ gas.modo_de_calculo }}</option>
+            {% endfor %}
+        </select>
+      
+        <!-- Input para cálculo com botijão -->
+        <div id="input-botijao">
+          <label for="qtd-botijao">Quantidade de botijões por mês:</label>
+          <input type="number" id="qtd-botijao" name="botijao_gas" placeholder="Informe a quantidade" step="0.01" min="0" onchange="salvarDados()">
+        </div>
+      
+        <!-- Input para cálculo com gás encanado -->
+        <div id="input-encanado" style="display: none;">
+          <label for="qtd-encanado">Consumo em m³/mês:</label>
+          <input type="number" id="qtd-encanado" name="volume_gas" placeholder="Informe o consumo" step="0.01" min="0" onchange="salvarDados()">
+        </div>
+      
+        <button type="submit">Calcular</button>
+        <button type="button" onclick="limparGas()">Limpar</button>
+      </form>
+      {% if gas_resultado %}
+        <p>Crédito de Carbono Mensal: {{ gas_resultado.credito|format_number }} tCO<sub>2</sub></p>
+        <p>Crédito de Carbono Anual: {{ gas_resultado.anual|format_number }} tCO<sub>2</sub></p>
+      {% endif %} 
+    </div>
+    
+    <!-- Energia Calculation Form -->
+    <div class="calculadora" id="energia-calculo">
+      <h2>Energia Elétrica</h2>
+      <form method="post">
+        {% csrf_token %}
+        <label for="tipo-energia">Tipo de Cálculo:</label>
+        <select id="tipo-energia" name="energia_tipo" onchange="exibirInputEnergia(); salvarDados();">
+          <option value="">Selecione o modo de cálculo para energia</option>
+            {% for energia in energias %}
+            <option value="{{ energia.modo_de_calculo }}">{{ energia.modo_de_calculo }}</option>
+            {% endfor %}
+        </select>
+        
+        <!-- Input para kWh consumidos -->
+        <div id="input-kwh" style="display: none;">
+          <label for="kwh-consumidos">Consumo em kWh:</label>
+          <input type="number" id="kwh-consumidos-input" name="kwh_usado" placeholder="Informe o consumo" step="0.01" min="0" onchange="salvarDados()">
+        </div>
+
+        <!-- Input para valor da conta -->
+        <div id="input-valor-conta">
+          <label for="valor-conta">Valor da Conta (R$):</label>
+          <input type="number" id="valor-conta-input" name="valor_da_conta" placeholder="Informe o valor da conta" step="0.01" min="0" onchange="salvarDados()">
+        </div>
+              
+        <button type="submit">Calcular</button>
+        <button type="button" onclick="limparEnergia()">Limpar</button>
+      </form>
+      {% if energia_resultado %}
+        <p>Crédito de Carbono Mensal: {{ energia_resultado.credito|format_number }} tCO<sub>2</sub></p>
+        <p>Crédito de Carbono Anual: {{ energia_resultado.anual|format_number }} tCO<sub>2</sub></p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="emissao-container calculadora-container">
+    <div class="calculadora" id="emissao-total">
+        <h3>Total de emissão em Toneladas:</h3>
+        <p>{{ total_anual|format_number }} tCO₂</p>
+    </div>
+    
+    <div class="button-voltar">
+      <a href="{% url 'index' %}"><button>Voltar à Página Inicial</button></a>
+    </div>
+
+    <div class="button-excluir">
+      <form method="post" action="{% url 'limpar_sessao' %}">
+        {% csrf_token %}
+        <button type="submit" onclick="limparDados()">Excluir Dados</button>
+      </form>
+    </div>
+
+    <div class="calculadora" id="compensacao">
+        <h3>Compensação necessária:</h3>
+        <p class="resul-compensacao">{{ arvores_necessarias|format_number:0 }} árvores por ano (R$ {{ custo_arvores|format_number:2 }})</p>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Carro, Energia, Onibus, Gas
+from .models import Carro, Energia, Gas
 
 class CarrosAdmin(admin.ModelAdmin):
     ordering = ('id',)
@@ -18,16 +18,6 @@ class EnergiaAdmin(admin.ModelAdmin):
     list_display_links = ('modo_de_calculo',)
 
 admin.site.register(Energia, EnergiaAdmin)
-
-class OnibusAdmin(admin.ModelAdmin):
-    ordering = ('id',)
-    list_display = ('id', 'tipo', 'legenda', 'emissao', 'consumo')
-    list_display_links = ('tipo',)
-    search_fields = ('tipo', 'consumo')
-    list_filter = ('tipo', 'emissao')
-    list_per_page = 5
-   
-admin.site.register(Onibus, OnibusAdmin)
 
 class GasAdmin(admin.ModelAdmin):
     ordering = ('id',)

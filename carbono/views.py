@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
-import math
+from math import ceil
 
-from .models import Carro, Energia, Onibus, Gas
+from .models import Carro, Energia, Gas
 
 # Renderização da página inicial
 def index(request):
@@ -12,14 +12,17 @@ def index(request):
 # Função para cálculo do valor do CC futuro baseado na TCO2
 def valor_da_tonelada(co):
     media_valor_credito = (70.10 * 5.6165)  # Média dos últimos 12 meses na bolsa de valores multiplicado pelo valor da média do euro
+    
     valor = co * media_valor_credito
     return valor
 
 # Função para cálculo de índice de árvores necessárias para compensar, baseado na TCO2
 def arvores(co):
     absorcao_co2 = 0.37  # Cálculo baseado do site IDESAM
+    
     arvore = co / absorcao_co2
-    return arvore
+    custo = ceil(arvore) * 35  # Custo médio de plantio de uma árvore
+    return (arvore, custo)
 
 '''
 FUNÇÕES PARA CÁLCULO DE CARBONO, RETORNANDO SEMPRE O VALOR MENSAL (credito) E ANUAL (anual)
@@ -54,9 +57,9 @@ def energia_reais(valor_da_conta, energia_obj):
     return (credito, anual)
 
 # Função para calcular carbono de ônibus, baseado na quilometragem mensal usada pelo usuário, dividido por uma média de passageiros.
-def onibus(km_por_mes_onibus):
+def onibus(km_por_mes_onibus, carro_obj):
     km_por_mes_onibus = float(km_por_mes_onibus)
-    emissao = (km_por_mes_onibus / 2.63) * 2.8 / 40  # Média de 40 passageiros por ônibus
+    emissao = (km_por_mes_onibus / carro_obj.consumo) * carro_obj.emissao / 40  # Média de 40 passageiros por ônibus
     credito = emissao / 1000
     anual = credito * 12
 
@@ -65,7 +68,7 @@ def onibus(km_por_mes_onibus):
 # Função para calcular carbono de gás de cozinha, baseado no numero de botijões (13kg) usados por mês.
 def gas_botijao(botijao, gas_obj):
     botijao = float(botijao) 
-    credito = (botijao * 40.15) / 1000
+    credito = (botijao * gas_obj.emissao) / 1000
     anual = credito * 12
 
     return (credito, anual)
@@ -73,13 +76,13 @@ def gas_botijao(botijao, gas_obj):
 # Função para calcular barbono de gás de cozinha, baseado no valor em m³ de gás encanado usado por mês.
 def gas_encanado(area, gas_obj):
     area = float(area) 
-    credito = (area * 1.997) / 1000
+    credito = (area * gas_obj.emissao) / 1000
     anual = credito * 12
 
     return (credito, anual)
 
 # Renderização da página da calculadora, absorvendo os valores inseridos no site para retornar os resultados.
-def teste(request):
+def calculadora(request):
     carros = Carro.objects.all()
     energias = Energia.objects.all()
     gases = Gas.objects.all()
@@ -100,7 +103,9 @@ def teste(request):
     
     total_anual = 0
     arvores_necessarias = 0
+    custo_arvores = 0
     valor_tonelada = 0
+    
 
     # Condição para receber informações no forms
     if request.method == 'POST':
@@ -114,6 +119,7 @@ def teste(request):
         botijao_gas = request.POST.get('botijao_gas')
         volume_gas = request.POST.get('volume_gas')
 
+        # Cálculo de carro
         if carro_tipo and km_por_mes:
             try:
                 km_por_mes = float(km_por_mes)
@@ -121,22 +127,29 @@ def teste(request):
                     raise ValueError("Km por mês não pode ser negativo.")
                 carro_obj = Carro.objects.get(tipo=carro_tipo)
                 credito, anual = carro(km_por_mes, carro_obj)
-                carro_resultado = {'credito': round(credito, 3), 'anual': round(anual, 3)}
+                if credito > 0:
+                    carro_resultado = {'credito': round(credito, 3), 'anual': round(anual, 3)}
+                else:
+                    carro_resultado - None
                 request.session['carro_resultado'] = carro_resultado
             except ValueError as e:
                 return HttpResponse(str(e), status=400)
 
+        # Cálculo de energia
         if energia_tipo:
             try:
                 energia_obj = Energia.objects.get(modo_de_calculo=energia_tipo)
-                if energia_tipo == 'Kwh':
+                if energia_tipo == 'kWh':
                     kwh_usado = request.POST.get('kwh_usado')
                     if kwh_usado:
                         kwh_usado = float(kwh_usado)
                         if kwh_usado < 0:
                             raise ValueError("kWh Usado não pode ser negativo.")
                         credito, anual = energia_kwh(kwh_usado, energia_obj)
-                        energia_resultado = {'credito': round(credito, 3), 'anual': round(anual, 3)}
+                        if credito > 0:
+                            energia_resultado = {'credito': round(credito, 3), 'anual': round(anual, 3)}
+                        else:
+                            energia_resultado = None
                         request.session['energia_resultado'] = energia_resultado
                         
                 elif energia_tipo == 'Conta de Luz':
@@ -146,43 +159,58 @@ def teste(request):
                         if valor_da_conta < 0:
                             raise ValueError("Valor da Conta de Luz não pode ser negativo.")
                         credito, anual = energia_reais(valor_da_conta, energia_obj)
-                        energia_resultado = {'credito': round(credito, 3), 'anual': round(anual, 3)}
+                        if credito > 0:
+                            energia_resultado = {'credito': round(credito, 3), 'anual': round(anual, 3)}
+                        else:
+                            energia_resultado = None
                         request.session['energia_resultado'] = energia_resultado
                         
                 else:
                     energia_resultado = {'error': 'Erro: Nenhum valor válido foi fornecido para o cálculo de energia.'}
             except ObjectDoesNotExist:
                 energia_resultado = {'error': 'Erro: Tipo de energia não encontrado.'}
-                
+        
+        # Cálculo de ônibus
         if km_por_mes_onibus:
             try:
                 km_por_mes_onibus = float(km_por_mes_onibus)
                 if km_por_mes_onibus < 0:
                     raise ValueError('Km por mês não pode ser negativo.')
-                credito, anual = onibus(km_por_mes_onibus)
-                onibus_resultado = {'credito': round(credito, 3), 'anual': round(anual, 3)}
+                carro_obj = Carro.objects.get(tipo='Ônibus')
+                credito, anual = onibus(km_por_mes_onibus, carro_obj)
+                if credito > 0:
+                    onibus_resultado = {'credito': round(credito, 3), 'anual': round(anual, 3)}
+                else:
+                    onibus_resultado = None
                 request.session['onibus_resultado'] = onibus_resultado
             except ValueError as e:
                 return HttpResponse(str(e), status=400)
             except ObjectDoesNotExist:
                 onibus_resultado = {'error': 'Erro: Tipo de ônibus não encontrado.'}
         
+        # Cálculo de gás
         if gas_tipo:
             try:
                 gas_obj = Gas.objects.get(modo_de_calculo=gas_tipo)
-                if gas_tipo == 'Botijão' and botijao_gas:
+                if gas_tipo == 'Botijão (13kg)' and botijao_gas:
                     botijao_gas = float(botijao_gas)
                     if botijao_gas < 0:
                         raise ValueError('Botijão de gás não pode ser negativo.')
                     credito, anual = gas_botijao(botijao_gas, gas_obj)
-                    gas_resultado = {'credito': round(credito, 3), 'anual': round(anual, 3)}
+                    if credito > 0:
+                        gas_resultado = {'credito': round(credito, 3), 'anual': round(anual, 3)}
+                    else:
+                        gas_resultado = None
                     request.session['gas_resultado'] = gas_resultado
-                elif gas_tipo == 'Encanado' and volume_gas:
+                elif gas_tipo == 'Gás Encanado (m³/mês)' and volume_gas:
                     volume_gas = float(volume_gas)
                     if volume_gas < 0:
                         raise ValueError('Volume de gás não pode ser negativo.')
                     credito, anual = gas_encanado(volume_gas, gas_obj)
-                    gas_resultado = {'credito': round(credito, 3), 'anual': round(anual, 3)}
+                    if credito > 0:
+                        gas_resultado = {'credito': round(credito, 3), 'anual': round(anual, 3)}
+                    else:
+                        gas_resultado = None
                     request.session['gas_resultado'] = gas_resultado
                 else:
                     gas_resultado = {'error': 'Erro: Nenhum valor válido foi fornecido para o cálculo de gás.'}
@@ -201,28 +229,50 @@ def teste(request):
 
     # Caso ao menos 1 dos cálculos acima forem realizados, retornar valores abaixo
     if total_anual > 0:        
-        arvores_necessarias = math.ceil(arvores(total_anual))
+        arvores_necessarias, custo_arvores = arvores(total_anual)
+        arvores_necessarias = ceil(arvores_necessarias)
         valor_tonelada = round(valor_da_tonelada(total_anual), 2)
 
     # Retorno para renderização no site
-    return render(request, 'carbono/teste.html', {
+    return render(request, 'carbono/calculadora.html', {
         'carro_resultado': carro_resultado,
         'energia_resultado': energia_resultado,
         'onibus_resultado': onibus_resultado,
         'gas_resultado': gas_resultado,
         'total_anual': round(total_anual, 3),
         'arvores_necessarias': arvores_necessarias,
+        'custo_arvores': round(custo_arvores, 2),
         'valor_tonelada': valor_tonelada,
         'carros': carros,
         'energias': energias,
         'onibus': onibus,
         'gases': gases,
     })
+
+
+'''
+FUNÇÕES PARA LIMPAR OS RESULTADOS DOS CÁLCULOS, INDIVIDUALMENTE OU TODOS JUNTOS
+'''
+
+def limpar_carro(request):
+    request.session['carro_resultado'] = None
+    return redirect('calculadora')
+
+def limpar_energia(request):
+    request.session['energia_resultado'] = None
+    return redirect('calculadora')
+
+def limpar_onibus(request):
+    request.session['onibus_resultado'] = None
+    return redirect('calculadora')
+
+def limpar_gas(request):
+    request.session['gas_resultado'] = None
+    return redirect('calculadora')
     
-# Função para limpar cálculadora, zerando todos os resultados
 def limpar_sessao(request):
     request.session['carro_resultado'] = None
     request.session['energia_resultado'] = None
     request.session['onibus_resultado'] = None
     request.session['gas_resultado'] = None
-    return redirect('teste')
+    return redirect('calculadora')
