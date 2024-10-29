@@ -70,10 +70,10 @@ p {
   border: 1px solid #ccc;
   padding: 20px;
   margin: 10px;
-  width: 450px; /* Largura fixa para cada calculadora */
+  width: 500px; /* Largura fixa para cada calculadora */
   flex: 1; /* Faz com que os cards ocupem espaço igual */
   min-width: 250px; /* Largura mínima para os cards */
-  max-width: 450px; /* Largura máxima para os cards */
+  max-width: 500px; /* Largura máxima para os cards */
   background: #ffffff; /* Fundo branco para os cards */
   border-radius: 10px; /* Bordas arredondadas */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra suave */
@@ -89,6 +89,7 @@ p {
   flex-wrap: wrap;
   justify-content: space-around; /* Distribui os cards lado a lado */
   padding: 20px; /* Adiciona padding ao redor da container */
+  
 }
 
 .resul-compensacao {
@@ -161,15 +162,22 @@ button {
   transition: background 0.3s ease; 
   font-size: 1rem;
 }
-
+/* Modifica a cor do p */
+.resul-valor{
+  color: #2E8B57;
+}
 button:hover {
   background-color: #5DBB8A; 
 }
 
-.button-voltar .button-excluir {
+/* Foi adicionado para melhor visual do usuário */
+.botoes {
   text-align: center; 
   margin-top: 20px;
-  align-content: center;
+  display: flex;
+  justify-content: center;
+  
+  
 }
 
 
