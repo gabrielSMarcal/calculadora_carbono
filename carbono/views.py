@@ -5,27 +5,40 @@ from math import ceil
 
 from .models import Carro, Energia, Gas
 
+'''
+************************************** CONSTANTES **************************************
+'''
+MEDIA_CC = 70.10
+MEDIA_EURO = 5.6165
+CUSTO_POR_ARVORE = 35
+CONV_ENERGIA = 0.37
+
+
 # Renderização da página inicial
 def index(request):
     return render(request, 'carbono/index.html')
 
+'''
+************************************** FUNÇÕES DAS CALCULADORAS **************************************
+'''
+
 # Função para cálculo do valor do CC futuro baseado na TCO2
 def valor_da_tonelada(co):
-    media_valor_credito = (70.10 * 5.6165)  # Média dos últimos 12 meses na bolsa de valores multiplicado pelo valor da média do euro
+    media_valor_credito = (MEDIA_CC * MEDIA_EURO)  # Média dos últimos 12 meses
     
     valor = co * media_valor_credito
     return valor
 
 # Função para cálculo de índice de árvores necessárias para compensar, baseado na TCO2
 def arvores(co):
-    absorcao_co2 = 0.37  # Cálculo baseado do site IDESAM
+    ABSORCAO = 0.37  # Cálculo baseado do site IDESAM
     
-    arvore = co / absorcao_co2
-    custo = ceil(arvore) * 35  # Custo médio de plantio de uma árvore
+    arvore = co / ABSORCAO
+    custo = ceil(arvore) * CUSTO_POR_ARVORE 
     return (arvore, custo)
 
 '''
-FUNÇÕES PARA CÁLCULO DE CARBONO, RETORNANDO SEMPRE O VALOR MENSAL (credito) E ANUAL (anual)
+******************* FUNÇÕES PARA CÁLCULO DE CARBONO, RETORNANDO SEMPRE O VALOR MENSAL (credito) E ANUAL (anual) *******************
 '''
 
 # Função para calcular carbono de carro, baseado na quilometragem por mês.
@@ -49,7 +62,7 @@ def energia_kwh(kwh_usado, energia_obj):
 # Função para calcular carbono de energia, baseada no valor monetário da conta de luz do usuário.
 def energia_reais(valor_da_conta, energia_obj):
     valor_da_conta = float(valor_da_conta)
-    conversao = valor_da_conta / 0.37
+    conversao = valor_da_conta / CONV_ENERGIA
     emissao = conversao * energia_obj.emissao
     credito = emissao / 1000
     anual = credito * 12
@@ -251,7 +264,7 @@ def calculadora(request):
 
 
 '''
-FUNÇÕES PARA LIMPAR OS RESULTADOS DOS CÁLCULOS, INDIVIDUALMENTE OU TODOS JUNTOS
+******************* FUNÇÕES PARA LIMPAR OS RESULTADOS DOS CÁLCULOS, INDIVIDUALMENTE OU TODOS JUNTOS *******************
 '''
 
 def limpar_carro(request):

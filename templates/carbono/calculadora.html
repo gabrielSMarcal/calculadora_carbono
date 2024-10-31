@@ -14,6 +14,7 @@
     <h1>Cálculo de Emissão de Carbono</h1>
   </header>
 
+  
   <div class="calculadora-container">
     <!-- Calculadora Carro -->
     <div class="calculadora" id="carro-calculo">
@@ -91,60 +92,68 @@
     
     <!-- Energia Calculation Form -->
     <div class="calculadora" id="energia-calculo">
-      <h2>Energia Elétrica</h2>
-      <form method="post">
-        {% csrf_token %}
-        <label for="tipo-energia">Tipo de Cálculo:</label>
-        <select id="tipo-energia" name="energia_tipo" onchange="exibirInputEnergia(); salvarDados();">
-          <option value="">Selecione o modo de cálculo para energia</option>
-            {% for energia in energias %}
-            <option value="{{ energia.modo_de_calculo }}">{{ energia.modo_de_calculo }}</option>
-            {% endfor %}
-        </select>
-        
-        <!-- Input para kWh consumidos -->
+        <h2>Energia Elétrica</h2>
+        <form method="post">
+          {% csrf_token %}
+          <label for="tipo-energia">Tipo de Cálculo:</label>
+          <select id="tipo-energia" name="energia_tipo" onchange="exibirInputEnergia(); salvarDados();">
+            <option value="">Selecione o modo de cálculo para energia</option>
+              {% for energia in energias %}
+              <option value="{{ energia.modo_de_calculo }}">{{ energia.modo_de_calculo }}</option>
+              {% endfor %}
+          </select>
+          
+          <!-- Input para kWh consumidos -->
         <div id="input-kwh" style="display: none;">
-          <label for="kwh-consumidos">Consumo em kWh:</label>
-          <input type="number" id="kwh-consumidos-input" name="kwh_usado" placeholder="Informe o consumo" step="0.01" min="0" onchange="salvarDados()">
+            <label for="kwh-consumidos">Consumo em kWh:</label>
+            <input type="number" id="kwh-consumidos-input" name="kwh_usado" placeholder="Informe o consumo" step="0.01" min="0" onchange="salvarDados()">
         </div>
 
-        <!-- Input para valor da conta -->
+          <!-- Input para valor da conta -->
         <div id="input-valor-conta">
-          <label for="valor-conta">Valor da Conta (R$):</label>
-          <input type="number" id="valor-conta-input" name="valor_da_conta" placeholder="Informe o valor da conta" step="0.01" min="0" onchange="salvarDados()">
+            <label for="valor-conta">Valor da Conta (R$):</label>
+            <input type="number" id="valor-conta-input" name="valor_da_conta" placeholder="Informe o valor da conta" step="0.01" min="0" onchange="salvarDados()">
         </div>
-              
-        <button type="submit">Calcular</button>
-        <button type="button" onclick="limparEnergia()">Limpar</button>
-      </form>
-      {% if energia_resultado %}
-        <p>Crédito de Carbono Mensal: {{ energia_resultado.credito|format_number }} tCO<sub>2</sub></p>
-        <p>Crédito de Carbono Anual: {{ energia_resultado.anual|format_number }} tCO<sub>2</sub></p>
-      {% endif %}
+                
+          <button type="submit">Calcular</button>
+          <button type="button" onclick="limparEnergia()">Limpar</button>
+        </form>
+        {% if energia_resultado %}
+          <p>Crédito de Carbono Mensal: {{ energia_resultado.credito|format_number }} tCO<sub>2</sub></p>
+          <p>Crédito de Carbono Anual: {{ energia_resultado.anual|format_number }} tCO<sub>2</sub></p>
+        {% endif %}
     </div>
   </div>
 
   <div class="emissao-container calculadora-container">
     <div class="calculadora" id="emissao-total">
-        <h3>Total de emissão em Toneladas:</h3>
-        <p>{{ total_anual|format_number }} tCO₂</p>
-    </div>
-    
-    <div class="button-voltar">
-      <a href="{% url 'index' %}"><button>Voltar à Página Inicial</button></a>
+      <h3>Total de emissão em Toneladas:</h3>
+      <p>{{ total_anual|format_number }} tCO₂</p>
     </div>
 
-    <div class="button-excluir">
-      <form method="post" action="{% url 'limpar_sessao' %}">
-        {% csrf_token %}
-        <button type="submit" onclick="limparDados()">Excluir Dados</button>
-      </form>
+    <div class="calculadora" id="valor">
+      <h3>Valor Monetário:</h3>
+      <p class="resul-valor">R${{ valor_tonelada|format_number:2 }}</p>
     </div>
-
+  
     <div class="calculadora" id="compensacao">
-        <h3>Compensação necessária:</h3>
-        <p class="resul-compensacao">{{ arvores_necessarias|format_number:0 }} árvores por ano (R$ {{ custo_arvores|format_number:2 }})</p>
+      <h3>Compensação necessária:</h3>
+      <p class="resul-compensacao">{{ arvores_necessarias|format_number:0 }} árvores por ano (R$ {{ custo_arvores|format_number:2 }})</p>
     </div>
   </div>
+  
+  <div class='botoes'>
+    <div class="button-voltar">
+      <div class="button-container">
+        <a href="{% url 'index' %}"><button>Voltar à Página Inicial</button></a>
+        
+        <form method="post" action="{% url 'limpar_sessao' %}">
+          {% csrf_token %}
+          <button type="submit" onclick="limparDados()">Excluir Dados</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  
 </body>
 </html>
