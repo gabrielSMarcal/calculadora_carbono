@@ -1,17 +1,36 @@
+import requests
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from math import ceil
+import os
 
 from .models import Carro, Energia, Gas
+
 
 '''
 ************************************** CONSTANTES **************************************
 '''
-MEDIA_CC = 70.10
-MEDIA_EURO = 5.6165
+MEDIA_CC = 63.87
 CUSTO_POR_ARVORE = 35
 CONV_ENERGIA = 0.37
+
+# URL da API e chave de acesso
+API_KEY = os.getenv('EXCHANGE_RATE_API_KEY')
+API_URL = f"https://v6.exchangerate-api.com/v6/{API_KEY}/latest/EUR"
+
+def get_euro_exchange_rate():
+    try:
+        response = requests.get(API_URL)
+        response.raise_for_status()
+        data = response.json()
+        return data['conversion_rates']['BRL']  # Supondo que você quer a taxa de EUR para BRL
+    except requests.RequestException as e:
+        print(f"Erro ao obter a taxa de câmbio: {e}")
+        return None
+
+# Atualizando a constante com o valor atual do euro
+MEDIA_EURO = get_euro_exchange_rate()
 
 
 # Renderização da página inicial
@@ -125,8 +144,6 @@ def calculadora(request):
         carro_tipo = request.POST.get('carro_tipo')
         km_por_mes = request.POST.get('km_por_mes')
         energia_tipo = request.POST.get('energia_tipo')
-
-        # Reconhecimento de cada variável no Template
         km_por_mes_onibus = request.POST.get('km_por_mes_onibus')
         gas_tipo = request.POST.get('gas_tipo')
         botijao_gas = request.POST.get('botijao_gas')
