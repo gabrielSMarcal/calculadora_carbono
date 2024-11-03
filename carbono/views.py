@@ -160,7 +160,7 @@ def calculadora(request):
                 if credito > 0:
                     carro_resultado = {'credito': round(credito, 3), 'anual': round(anual, 3)}
                 else:
-                    carro_resultado - None
+                    carro_resultado = None
                 request.session['carro_resultado'] = carro_resultado
             except ValueError as e:
                 return HttpResponse(str(e), status=400)

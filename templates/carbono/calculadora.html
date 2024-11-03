@@ -26,7 +26,9 @@
         <select id="tipo-carro" name="carro_tipo" class="form-control" onchange="salvarDados()">
           <option value="">Selecione o tipo de carro</option>
             {% for carro in carros %}
-            <option value="{{ carro.tipo }}">{{ carro.tipo }}</option>
+              {% if carro.tipo != 'Ônibus' %}
+              <option value="{{ carro.tipo }}">{{ carro.tipo }}</option>
+              {% endif %}
             {% endfor %}
         </select>
         
