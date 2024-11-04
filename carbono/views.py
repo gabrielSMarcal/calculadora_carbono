@@ -30,7 +30,7 @@ def get_euro_exchange_rate():
         return None
 
 # Atualizando a constante com o valor atual do euro
-MEDIA_EURO = get_euro_exchange_rate()
+MEDIA_EURO = get_euro_exchange_rate() or 6.5
 
 
 # Renderização da página inicial
