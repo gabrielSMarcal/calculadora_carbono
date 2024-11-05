@@ -1,8 +1,8 @@
-import requests
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from math import ceil
+import requests
 import os
 
 from .models import Carro, Energia, Gas
