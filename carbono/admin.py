@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from .models import Carro, Energia, Gas
 
+# Configuração admin para Carros
 class CarrosAdmin(admin.ModelAdmin):
     ordering = ('id',)
     list_display = ('id', 'tipo', 'legenda', 'emissao', 'consumo')
@@ -12,6 +13,7 @@ class CarrosAdmin(admin.ModelAdmin):
 
 admin.site.register(Carro, CarrosAdmin)
 
+# Configuração admin para Energia
 class EnergiaAdmin(admin.ModelAdmin):
     ordering = ('id',)
     list_display = ('id', 'modo_de_calculo', 'legenda', 'emissao')
@@ -19,6 +21,7 @@ class EnergiaAdmin(admin.ModelAdmin):
 
 admin.site.register(Energia, EnergiaAdmin)
 
+# Configuração admin para Gás
 class GasAdmin(admin.ModelAdmin):
     ordering = ('id',)
     list_display = ('id', 'modo_de_calculo', 'legenda', 'emissao')
