@@ -62,7 +62,7 @@ p {
 .calculadora-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around; /* Distribui os cálculos lado a lado */
+  justify-content: space-around;
   padding: 20px;
 }
 
@@ -70,26 +70,28 @@ p {
   border: 1px solid #ccc;
   padding: 20px;
   margin: 10px;
-  width: 500px; /* Largura fixa para cada calculadora */
-  flex: 1; /* Faz com que os cards ocupem espaço igual */
-  min-width: 250px; /* Largura mínima para os cards */
-  max-width: 500px; /* Largura máxima para os cards */
-  background: #ffffff; /* Fundo branco para os cards */
-  border-radius: 10px; /* Bordas arredondadas */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra suave */
-  padding: 20px; /* Espaçamento interno */
-  transition: transform 0.2s; /* Efeito suave ao passar o mouse */
+  width: 500px;
+  flex: 1;
+  min-width: 250px;
+  max-width: 500px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  transition: transform 0.2s;
 }
 
+ /* Aumenta levemente o card ao passar o mouse */
 .calculadora:hover {
-  transform: scale(1.02); /* Aumenta levemente o card ao passar o mouse */
+  transform: scale(1.02);
 }
+
+/* Distribui os cards lado a lado */
 .emissao-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around; /* Distribui os cards lado a lado */
-  padding: 20px; /* Adiciona padding ao redor da container */
-  
+  justify-content: space-around;
+  padding: 20px;
 }
 
 .resul-compensacao {
@@ -105,7 +107,7 @@ select {
   background-color: #ffffff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: border-color 0.3s, box-shadow 0.3s;
-  appearance: none; /* Remove o estilo padrão do navegador */
+  appearance: none;
   background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="grey"><polygon points="0,0 20,0 10,10" /></svg>');
   background-repeat: no-repeat;
   background-position: right 10px top 50%;
@@ -124,17 +126,17 @@ select:focus {
 }
 h2 {
   font-size: 1.8rem;
-  margin-bottom: 15px; /* Mais espaço abaixo[ do título */
-  color: #002f6c; /* Cor do título dos cards */
-  border-bottom: 2px solid #58d17e; /* Linha embaixo do título */
-  padding-bottom: 10px; /* Espaço abaixo do título */
+  margin-bottom: 15px;
+  color: #002f6c;
+  border-bottom: 2px solid #58d17e;
+  padding-bottom: 10px;
 }
 
 label {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
-  color: #444; /* Cor do texto */
+  color: #444;
 }
 
 input[type="number"] {
@@ -144,15 +146,15 @@ input[type="number"] {
   border: 2px solid #2E8B57; 
   border-radius: 5px; 
   font-size: 1rem;
-  transition: border-color 0.3s; /* Transição suave da cor da borda */
+  transition: border-color 0.3s;
 }
 
 input[type="number"]:focus {
-  border-color: #58d17e; /* Cor da borda ao focar no campo */
+  border-color: #58d17e;
 }
 
 button {
-  margin-top: 10px; /* Espaço acima do botão */
+  margin-top: 10px;
   padding: 10px 15px;
   background-color: #2e8b57; 
   color: white;
@@ -162,6 +164,7 @@ button {
   transition: background 0.3s ease; 
   font-size: 1rem;
 }
+
 /* Modifica a cor do p */
 .resul-valor{
   color: #2E8B57;
@@ -171,12 +174,13 @@ button:hover {
 }
 
 /* Foi adicionado para melhor visual do usuário */
-.botoes {
-  text-align: center; 
+.button-container {
+  text-align: center;
   margin-top: 20px;
+  margin-bottom: 20px;
   display: flex;
   justify-content: center;
-  
+  gap: 20px
   
 }
 

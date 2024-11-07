@@ -75,6 +75,7 @@ def calculadora(request):
     custo_arvores = 0
     valor_tonelada = 0
     
+    
     # Condição para receber informações no forms
     if request.method == 'POST':
         carro_tipo = request.POST.get('carro_tipo')
@@ -152,7 +153,7 @@ def calculadora(request):
                     else:
                         energia_resultado = None
                     request.session['energia_resultado'] = energia_resultado
-                    
+            
             elif energia_tipo == 'Conta de Luz':
                 valor_da_conta = request.POST.get('valor_da_conta')
                 if valor_da_conta:
@@ -165,7 +166,7 @@ def calculadora(request):
                     else:
                         energia_resultado = None
                     request.session['energia_resultado'] = energia_resultado
-                    
+            
             else:
                 energia_resultado = {'error': 'Erro: Nenhum valor válido foi fornecido para o cálculo de energia.'}
 

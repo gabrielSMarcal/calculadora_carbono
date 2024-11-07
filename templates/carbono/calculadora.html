@@ -137,11 +137,17 @@
     <div class="calculadora" id="valor">
       <h3>Valor Monetário:</h3>
       <p class="resul-valor">R${{ valor_tonelada|format_number:2 }}</p>
+      {% if total_anual > 0 %}
+        <a href="https://br.investing.com/commodities/carbon-emissions-historical-data" target="_blank">Fonte do valor do Crédito de Carbono</a>
+      {% endif %} 
     </div>
   
     <div class="calculadora" id="compensacao">
       <h3>Compensação necessária:</h3>
       <p class="resul-compensacao">{{ arvores_necessarias|format_number:0 }} árvores por ano (R$ {{ custo_arvores|format_number:2 }})</p>
+      {% if arvores_necessarias > 0 %}
+        <a href="https://idesam.org" target="_blank">Participe do projeto da Idesam</a>
+      {% endif %}
     </div>
   </div>
   
