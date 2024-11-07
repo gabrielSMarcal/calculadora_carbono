@@ -14,9 +14,8 @@ def valor_da_tonelada(co, MEDIA_CC, MEDIA_EURO):
     return valor
 
 # Função para cálculo de índice de árvores necessárias para compensar, baseado na TCO2
-def arvores(co, CUSTO_POR_ARVORE):
-    ABSORCAO = 0.37  # Cálculo baseado do site IDESAM
-    
+def arvores(co, CUSTO_POR_ARVORE, ABSORCAO):
+        
     arvore = co / ABSORCAO
     custo = ceil(arvore) * CUSTO_POR_ARVORE 
     return (arvore, custo)
@@ -56,9 +55,9 @@ def energia_reais(valor_da_conta, energia_obj, CONV_ENERGIA):
     return (credito, anual)
 
 # Função para calcular carbono de ônibus, baseado na quilometragem mensal usada pelo usuário, dividido por uma média de passageiros.
-def onibus(km_por_mes_onibus, carro_obj):
+def onibus(km_por_mes_onibus, carro_obj, MEDIA_PASSAGEIROS):
     km_por_mes_onibus = float(km_por_mes_onibus)
-    emissao = (km_por_mes_onibus / carro_obj.consumo) * carro_obj.emissao / 40  # Média de 40 passageiros por ônibus
+    emissao = (km_por_mes_onibus / carro_obj.consumo) * carro_obj.emissao / MEDIA_PASSAGEIROS  # Média de 40 passageiros por ônibus
     credito = emissao / 1000
     anual = credito * 12
 

@@ -1,23 +1,25 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.core.exceptions import ObjectDoesNotExist
+
 from math import ceil
 import requests
 
-
+# Importando os modelos e funções do arquivo utils.py
 from .models import Carro, Energia, Gas
-from .utils import  arvores, carro, energia_kwh, energia_reais, gas_botijao, gas_encanado, onibus, valor_da_tonelada
+from .utils import arvores, carro, energia_kwh, energia_reais, gas_botijao, gas_encanado, onibus, valor_da_tonelada
 
 '''
 **************
 * CONSTANTES *
 **************
 '''
-MEDIA_CC = 63.87
+MEDIA_CC = 63.93 # Média do valor do Crédito de Carbono CFI2Z4 no mês de Outubro de 2024, segundo site https://br.investing.com/commodities/carbon-emissions-historical-data
+ABSORCAO = 0.37
 CUSTO_POR_ARVORE = 35
+MEDIA_PASSAGEIROS = 40
 CONV_ENERGIA = 0.37
 
-# URL da API e chave de acesso
+
+# Aplicação para a constante do MEDIA_EURO, que é a taxa de câmbio do euro em relação ao real
 API_URL = f"https://v6.exchangerate-api.com/v6/b4da300231791b77b91124b8/latest/EUR" #Key gratuita, disponibilizada para finalidade de ser executada por qualquer avaliador
 
 # Função para obter a taxa de câmbio do euro e converter em reais
@@ -46,10 +48,12 @@ def index(request):
 
 # Renderização da página da calculadora, absorvendo os valores inseridos no site para retornar os resultados.
 def calculadora(request):
+    # Obtenção dos objetos dos modelos
     carros = Carro.objects.all()
     energias = Energia.objects.all()
     gases = Gas.objects.all()
 
+    # Inicialização das variáveis de sessão
     if 'carro_resultado' not in request.session:
         request.session['carro_resultado'] = None
     if 'energia_resultado' not in request.session:
@@ -59,17 +63,18 @@ def calculadora(request):
     if 'gas_resultado' not in request.session:
         request.session['gas_resultado'] = None
 
+    # Recebendo os valores das variáveis de sessão
     carro_resultado = request.session['carro_resultado']
     energia_resultado = request.session['energia_resultado']
     onibus_resultado = request.session['onibus_resultado']
     gas_resultado = request.session['gas_resultado']
     
+    # Inicialização das variáveis
     total_anual = 0
     arvores_necessarias = 0
     custo_arvores = 0
     valor_tonelada = 0
     
-
     # Condição para receber informações no forms
     if request.method == 'POST':
         carro_tipo = request.POST.get('carro_tipo')
@@ -99,7 +104,7 @@ def calculadora(request):
             if km_por_mes_onibus < 0:
                 raise ValueError('Km por mês não pode ser negativo.')
             carro_obj = Carro.objects.get(tipo='Ônibus')
-            credito, anual = onibus(km_por_mes_onibus, carro_obj)
+            credito, anual = onibus(km_por_mes_onibus, carro_obj, MEDIA_PASSAGEIROS)
             if credito > 0:
                 onibus_resultado = {'credito': round(credito, 3), 'anual': round(anual, 3)}
             else:
@@ -176,7 +181,7 @@ def calculadora(request):
 
     # Caso ao menos 1 dos cálculos acima forem realizados, retornar valores abaixo
     if total_anual > 0:        
-        arvores_necessarias, custo_arvores = arvores(total_anual, CUSTO_POR_ARVORE)
+        arvores_necessarias, custo_arvores = arvores(total_anual, CUSTO_POR_ARVORE, ABSORCAO)
         arvores_necessarias = ceil(arvores_necessarias)
         valor_tonelada = round(valor_da_tonelada(total_anual, MEDIA_CC, MEDIA_EURO), 2)
 
