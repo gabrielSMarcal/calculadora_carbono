@@ -176,16 +176,8 @@ button:hover {
   margin-top: 20px;
   display: flex;
   justify-content: center;
-}
-
-.button-container {
-  display: flex;
-  gap: 10px; /* Espaçamento entre os botões */
-}
-
-.button-container form,
-.button-container a {
-  margin: 0;
+  
+  
 }
 
 
