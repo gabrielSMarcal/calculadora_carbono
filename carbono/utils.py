@@ -21,12 +21,13 @@ def valor_monetario():
     else:
         return None
     
-# Aplicação para a constante do CAMBIO, que é a taxa de câmbio do euro em relação ao real
-
-
+    
+    
+    
 # Função para obter a taxa de câmbio do euro e converter em reais
 def taxa_de_cambio_euro():
-    API_URL = f"https://v6.exchangerate-api.com/v6/b4da300231791b77b91124b8/latest/EUR" #Key gratuita, disponibilizada para finalidade de ser executada por qualquer avaliador
+    #Key gratuita, disponibilizada para finalidade de ser executada por qualquer avaliador
+    API_URL = f"https://v6.exchangerate-api.com/v6/b4da300231791b77b91124b8/latest/EUR" 
     
     try:
         resposta = requests.get(API_URL)
