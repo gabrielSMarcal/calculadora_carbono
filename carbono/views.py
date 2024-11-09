@@ -1,40 +1,25 @@
 from django.shortcuts import render, redirect
 
+# Importando função para trazer valor arredondado para cima
 from math import ceil
-import requests
+
 
 # Importando os modelos e funções do arquivo utils.py
 from .models import Carro, Energia, Gas
-from .utils import arvores, carro, energia_kwh, energia_reais, gas_botijao, gas_encanado, onibus, valor_da_tonelada
+from .utils import arvores, carro, energia_kwh, energia_reais, gas_botijao, gas_encanado, onibus, taxa_de_cambio_euro, valor_da_tonelada, valor_monetario
 
 '''
 **************
 * CONSTANTES *
 **************
 '''
-MEDIA_CC = 63.93 # Média do valor do Crédito de Carbono CFI2Z4 no mês de Outubro de 2024, segundo site https://br.investing.com/commodities/carbon-emissions-historical-data
+
 ABSORCAO = 0.37
+CAMBIO = taxa_de_cambio_euro()
+CC_VALOR = valor_monetario() 
+CONV_ENERGIA = 0.37
 CUSTO_POR_ARVORE = 35
 MEDIA_PASSAGEIROS = 40
-CONV_ENERGIA = 0.37
-
-
-# Aplicação para a constante do MEDIA_EURO, que é a taxa de câmbio do euro em relação ao real
-API_URL = f"https://v6.exchangerate-api.com/v6/b4da300231791b77b91124b8/latest/EUR" #Key gratuita, disponibilizada para finalidade de ser executada por qualquer avaliador
-
-# Função para obter a taxa de câmbio do euro e converter em reais
-def get_euro_exchange_rate():
-    try:
-        response = requests.get(API_URL)
-        response.raise_for_status()
-        data = response.json()
-        return data['conversion_rates']['BRL']  
-    except requests.RequestException as e:
-        print(f"Erro ao obter a taxa de câmbio: {e}")
-        return None
-
-# Atualizando a constante com o valor atual do euro
-MEDIA_EURO = get_euro_exchange_rate()
 
 '''
 ****************************
@@ -184,7 +169,7 @@ def calculadora(request):
     if total_anual > 0:        
         arvores_necessarias, custo_arvores = arvores(total_anual, CUSTO_POR_ARVORE, ABSORCAO)
         arvores_necessarias = ceil(arvores_necessarias)
-        valor_tonelada = round(valor_da_tonelada(total_anual, MEDIA_CC, MEDIA_EURO), 2)
+        valor_tonelada = round(valor_da_tonelada(total_anual, CC_VALOR, CAMBIO), 2)
 
     # Retorno para renderização no site
     return render(request, 'carbono/calculadora.html', {
@@ -201,7 +186,7 @@ def calculadora(request):
         'onibus': onibus,
         'gases': gases,
     })
-    
+
     
     
 

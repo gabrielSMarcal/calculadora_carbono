@@ -1,4 +1,41 @@
 from math import ceil
+from bs4 import BeautifulSoup
+import requests
+
+'''
+*************************************************************************************************
+* FUNÇÕES PARA COLETAR VALORES DE EMISSÃO DE CARBONO FUTURO E CALCULAR A TAXA DE CÂMBIO DO EURO *
+*************************************************************************************************
+'''
+
+# Função para obter o valor monetário da tonelada de carbono
+def valor_monetario():
+    html = requests.get ("https://br.investing.com/commodities/carbon-emissions-historical-data").content
+    soup = BeautifulSoup (html, "html.parser")
+    credito = soup.find ("div", "text-5xl/9 font-bold text-[#232526] md:text-[42px] md:leading-[60px]")
+
+    if credito != None:
+        valor_texto = credito.text.strip().replace(',', '.')
+        valor = float(valor_texto)
+        return valor
+    else:
+        return None
+    
+# Aplicação para a constante do CAMBIO, que é a taxa de câmbio do euro em relação ao real
+
+
+# Função para obter a taxa de câmbio do euro e converter em reais
+def taxa_de_cambio_euro():
+    API_URL = f"https://v6.exchangerate-api.com/v6/b4da300231791b77b91124b8/latest/EUR" #Key gratuita, disponibilizada para finalidade de ser executada por qualquer avaliador
+    
+    try:
+        resposta = requests.get(API_URL)
+        resposta.raise_for_status()
+        dados = resposta.json()
+        return dados['conversion_rates']['BRL']  
+    except requests.RequestException as e:
+        print(f"Erro ao obter a taxa de câmbio: {e}")
+        return None
 
 '''
 **********************************************
@@ -7,8 +44,8 @@ from math import ceil
 '''
 
 # Função para cálculo do valor do CC futuro baseado na TCO2
-def valor_da_tonelada(co, MEDIA_CC, MEDIA_EURO):
-    media_valor_credito = (MEDIA_CC * MEDIA_EURO)  # Média dos últimos 12 meses
+def valor_da_tonelada(co, CC_VALOR, CAMBIO):
+    media_valor_credito = (CC_VALOR * CAMBIO)
     
     valor = co * media_valor_credito
     return valor
@@ -57,7 +94,7 @@ def energia_reais(valor_da_conta, energia_obj, CONV_ENERGIA):
 # Função para calcular carbono de ônibus, baseado na quilometragem mensal usada pelo usuário, dividido por uma média de passageiros.
 def onibus(km_por_mes_onibus, carro_obj, MEDIA_PASSAGEIROS):
     km_por_mes_onibus = float(km_por_mes_onibus)
-    emissao = (km_por_mes_onibus / carro_obj.consumo) * carro_obj.emissao / MEDIA_PASSAGEIROS  # Média de 40 passageiros por ônibus
+    emissao = (km_por_mes_onibus / carro_obj.consumo) * carro_obj.emissao / MEDIA_PASSAGEIROS
     credito = emissao / 1000
     anual = credito * 12
 
