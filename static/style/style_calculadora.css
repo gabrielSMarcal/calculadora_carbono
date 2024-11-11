@@ -1,3 +1,5 @@
+/*--------------ESILOS MAIN--------------*/
+
 * {
   margin: 0;
   padding: 0;
@@ -23,7 +25,7 @@ h1 {
 }
 
 main {
-  max-width: 600px; 
+  max-width: 90vw; 
   margin: 20px auto; 
   padding: 20px;
   background: #ffffff; 
@@ -43,22 +45,18 @@ label {
   font-weight: bold; 
 }
 
-input[type="number"] {
-  width: 100%; 
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 2px solid #2E8B57; 
-  border-radius: 5px; 
-  font-size: 1rem;
-}
-
+/* Formatação base para resultados */
 p {
   margin-top: 15px;
   font-weight: bold;
   color: #e13434; 
   font-size: 1.2rem; 
 }
+/*--------------||--------------*/
 
+/*--------------DEMAIS ESTILOS--------------*/
+
+/* Estilo da barra de navegação */
 .calculadora-container {
   display: flex;
   flex-wrap: wrap;
@@ -66,14 +64,15 @@ p {
   padding: 20px;
 }
 
+/* Estilo do card das calculadoras */
 .calculadora {
   border: 1px solid #ccc;
   padding: 20px;
   margin: 10px;
-  width: 500px;
+  width: 100%;
   flex: 1;
   min-width: 250px;
-  max-width: 500px;
+  max-width: 100%;
   background: #ffffff;
   border-radius: 10px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
@@ -94,10 +93,12 @@ p {
   padding: 20px;
 }
 
+/* Resultado da compensação */
 .resul-compensacao {
   color: #2E8B57;
 }
 
+/* Estilo do elemento select para dropdowns */
 select {
   width: 100%;
   padding: 10px;
@@ -114,16 +115,19 @@ select {
   background-size: 12px;
 }
 
+/* Estilo do elemento select ao passar o mouse */
 select:hover {
   border-color: #347350;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Estilo do elemento select ao receber foco */
 select:focus {
   border-color: #347350;
   outline: none;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
+
 h2 {
   font-size: 1.8rem;
   margin-bottom: 15px;
@@ -139,6 +143,7 @@ label {
   color: #444;
 }
 
+/* Estipo dos cmapos de entrada numérica */
 input[type="number"] {
   width: 100%; 
   padding: 10px;
@@ -169,6 +174,7 @@ button {
 .resul-valor{
   color: #2E8B57;
 }
+
 button:hover {
   background-color: #5DBB8A; 
 }
@@ -184,22 +190,111 @@ button:hover {
   
 }
 
+/* -------------- ESTILOS RESOLUÇÃO RESPONSIVA -------------- */
 
-/* Responsividade */
-@media (max-width: 768px) {
-  main {
-    padding: 15px; 
+/* Estilos para dispositivos com largura máxima de 1024px (desktop pequeno) */
+@media (max-width: 1024px) {
+  body {
+      font-size: 1.1rem;
   }
-
-  h1 {
-    font-size: 2rem; 
+  .navbar {
+      padding: 10px 5%;
   }
-
-  h2 {
-    font-size: 1.5rem; 
+  .hero {
+      padding: 250px 5%;
+      text-align: center;
   }
-
-  input[type="number"], button {
-    font-size: 0.9rem; 
+  .texto-explicacao, .text {
+      width: 75%;
+      margin-left: 12.5%;
+  }
+  .cards {
+      flex-direction: column;
+  }
+  .card {
+      width: 100%;
+      margin-bottom: 15px;
   }
 }
+
+/* Estilos para dispositivos com largura máxima de 834px (iPad) */
+@media (max-width: 834px) {
+  body {
+      font-size: 1.1rem;
+  }
+  .navbar {
+      padding: 10px 5%;
+  }
+  .hero {
+      padding: 250px 5%;
+      text-align: center;
+  }
+  .texto-explicacao, .text {
+      width: 80%;
+      margin-left: 10%;
+  }
+  .cards {
+      flex-direction: column;
+  }
+  .card {
+      width: 100%;
+      margin-bottom: 15px;
+  }
+}
+
+/* Estilos para dispositivos com largura máxima de 768px (tablets) */
+@media (max-width: 768px) {
+  body {
+      font-size: 1.05rem;
+  }
+  .navbar {
+      padding: 10px 5%;
+  }
+  .hero {
+      padding: 200px 5%;
+      text-align: center;
+  }
+  .texto-explicacao, .text {
+      width: 85%;
+      margin-left: 7.5%;
+  }
+  .cards {
+      flex-direction: column;
+  }
+  .card {
+      width: 100%;
+      margin-bottom: 15px;
+  }
+}
+
+/* Estilos para dispositivos com largura máxima de 480px (mobile) */
+@media (max-width: 480px) {
+  body {
+      font-size: 1rem;
+  }
+  .navbar {
+      flex-direction: column;
+      padding: 10px;
+  }
+  .navbar ul {
+      flex-direction: column;
+      align-items: center;
+  }
+  .hero {
+      padding: 150px 5%;
+      text-align: center;
+  }
+  .texto-explicacao, .text {
+      width: 90%;
+      margin-left: 5%;
+  }
+  .cards {
+      flex-direction: column;
+  }
+  .card {
+      width: 100%;
+      margin-bottom: 15px;
+  }
+}
+
+

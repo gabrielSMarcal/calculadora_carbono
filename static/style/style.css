@@ -1,3 +1,5 @@
+/* -------------- ESTILOS MAIN -------------- */
+
 /* Remove as margens e o preenchimento padrão de todos os elementos */
 * {
     margin: 0;
@@ -67,6 +69,8 @@ body {
 .navbar ul li a:hover {
     text-decoration: none;
 }
+
+/* -------------- || -------------- */
 
 /* Estilo do bloco de destaque */
 .hero {
@@ -308,3 +312,151 @@ footer {
     color: #000;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }  
+
+/* -------------- ESTILOS RESOLUÇÃO RESPONSIVA -------------- */
+
+/* Estilos para dispositivos com largura máxima de 1024px (desktop pequeno) */
+@media (max-width: 1024px) {
+    body {
+        font-size: 1.1rem;
+    }
+    .navbar {
+        padding: 10px 5%;
+    }
+    .hero {
+        padding: 250px 5%;
+        text-align: center;
+    }
+    .texto-explicacao, .text {
+        width: 93%;
+        margin-left: 5%;
+    }
+    .cards {
+        flex-direction: column;
+    }
+    .card {
+        width: 92%;
+        margin-bottom: 20px;
+    }
+    .texto-com-imagem {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+/* Estilos para dispositivos com largura máxima de 834px (iPad) */
+@media (max-width: 834px) {
+    body {
+        font-size: 1.1rem;
+    }
+    .navbar {
+        flex-direction: column;
+    }
+    .navbar ul {
+        flex-direction: column;
+        align-items: center;
+    }
+    .hero {
+        padding: 150px 5%;
+        text-align: center;
+    }
+    .texto-explicacao, .text {
+        width: 90%;
+        margin-left: 5%;
+    }
+    .card {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .card .text {
+        order: 1;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .card .imagem {
+        order: 2;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+}
+
+/* Estilos para dispositivos com largura máxima de 768px (tablets) */
+@media (max-width: 768px) {
+    body {
+        font-size: 1.1rem;
+    }
+    .navbar {
+        flex-direction: column;
+    }
+    .navbar ul {
+        flex-direction: column;
+        align-items: center;
+    }
+    .hero {
+        padding: 150px 5%;
+        text-align: center;
+    }
+    .texto-explicacao, .text {
+        width: 78%;
+        margin-left: 5%;
+    }
+    .card {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+    .card .text {
+        order: 1;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .card .imagem {
+        order: 2;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+}
+
+/* Estilos para dispositivos com largura máxima de 480px (mobile) */
+@media (max-width: 480px) {
+    body {
+        font-size: 1.1rem;
+    }
+    .navbar {
+        flex-direction: column;
+    }
+    .navbar ul {
+        flex-direction: column;
+        align-items: center;
+        font-size: 0.5rem;
+    }
+    .hero {
+        padding: 150px 5%;
+        text-align: center;
+    }
+    .texto-explicacao, .text {
+        width: 88%;
+        margin-left: 5%;
+    }
+    .card {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+    .card .text {
+        order: 1;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .card .imagem {
+        order: 2;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+}
+
