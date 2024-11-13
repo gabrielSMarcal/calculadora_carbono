@@ -1,7 +1,7 @@
 # Instruções para o Professor Avaliador
 
 1. **Criar e Ativar o Ambiente Virtual:**
-    - Navegue até o diretório do projeto e abra o terminal.
+    - Abra o terminal e navegue até o diretório do projeto.
     - Execute o comando abaixo para criar o ambiente virtual:
       ```
       python -m venv venv
