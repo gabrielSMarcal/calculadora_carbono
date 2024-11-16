@@ -1,7 +1,7 @@
 # Instruções para o Professor Avaliador
 
 1. **Criar e Ativar o Ambiente Virtual:**
-    - Abra o terminal e navegue até o diretório do projeto.
+    - Abra o terminal (Ctrl + J no VS Code) e navegue até o diretório do projeto (cd Nome_da_pasta).
     - Execute o comando abaixo para criar o ambiente virtual:
       ```
       python -m venv venv
@@ -10,6 +10,11 @@
       ```
       source venv/bin/activate   # Para sistemas Unix
       .\venv\Scripts\activate    # Para Windows
+      (Caso ocorra erro de UnauthorizedAccess no Windows, utilize o comando abaixo
+      
+      Set-ExecutionPolicy Unrestricted -Scope Process
+      
+      Depois, execute o comando novamente)
       ```
 
 2. **Instalar os Requirements:**
