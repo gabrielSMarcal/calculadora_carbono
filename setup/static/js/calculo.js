@@ -9,7 +9,7 @@ function salvarDados() {
   localStorage.setItem('tipo-energia', document.getElementById('tipo-energia').value);
   localStorage.setItem('kwh-consumidos-input', document.getElementById('kwh-consumidos-input').value);
   localStorage.setItem('valor-conta-input', document.getElementById('valor-conta-input').value);
-}
+};
 
 // Função para restaurar os dados do localStorage
 function restaurarDados() {
@@ -22,6 +22,33 @@ function restaurarDados() {
   document.getElementById('tipo-energia').value = localStorage.getItem('tipo-energia') || "";
   document.getElementById('kwh-consumidos-input').value = localStorage.getItem('kwh-consumidos-input') || "";
   document.getElementById('valor-conta-input').value = localStorage.getItem('valor-conta-input') || "";
+};
+
+function verificarCarro() {
+  const tipoCarro = document.getElementById('tipo-carro').value;
+  if (tipoCarro === "") {
+    alert("Selecione um tipo de veículo 🚗");
+    return false;
+  }
+  return true;
+};
+
+function verificarGas() {
+  const tipoGas = document.getElementById('tipo-gas').value;
+  if (tipoGas === "") {
+    alert("Selecione um modo de cálculo para gás 🏮");
+    return false;
+  }
+  return true;
+};
+
+function verificarEnergia() {
+  const tipoEnergia = document.getElementById('tipo-energia').value;
+  if (tipoEnergia === "") {
+    alert("Selecione um modo de cálculo para energia ⚡");
+    return false;
+  }
+  return true;
 };
 
 // Função para limpar os dados do localStorage e os inputs

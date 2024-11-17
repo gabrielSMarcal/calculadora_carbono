@@ -20,7 +20,7 @@
     <!-- Calculadora Carro -->
     <div class="calculadora" id="carro-calculo">
       <h2>Carro</h2>
-      <form method="post">
+      <form method="post" onsubmit="return verificarCarro()">
         {% csrf_token %}
         <label for="tipo-carro">Tipo de Carro:</label>
         <select id="tipo-carro" name="carro_tipo" class="form-control" onchange="salvarDados()">
@@ -33,7 +33,7 @@
         </select>
         
         <label for="km-carro">Km percorridos:</label>
-        <input type="number" id="km-carro" name="km_por_mes" placeholder="Informe os km" step="0.01" min="0" onchange="salvarDados()">
+        <input type="number" id="km-carro" name="km_por_mes" placeholder="Informe a quilometragem (Mês)" step="0.01" min="0" onchange="salvarDados()">
         <button type="submit">Calcular</button>
         <button type="button" onclick="limparCarro()">Limpar</button>
       </form>
@@ -49,7 +49,7 @@
       <form method="post">
         {% csrf_token %}
         <label for="km-onibus">Km percorridos:</label>
-        <input type="number" id="km-onibus" name="km_por_mes_onibus" placeholder="Informe os km" step="0.01" min="0" onchange="salvarDados()">
+        <input type="number" id="km-onibus" name="km_por_mes_onibus" placeholder="Informe a quilometragem (Mês)" step="0.01" min="0" onchange="salvarDados()">
         <button type="submit">Calcular</button>
         <button type="button" onclick="limparTransporte()">Limpar</button>
       </form>
@@ -62,7 +62,7 @@
     <!-- Calculadora Gás -->
     <div class="calculadora" id="gas-cozinha-calculo">
       <h2>Gás de Cozinha</h2>
-      <form method="post">
+      <form method="post" onsubmit="return verificarGas()">
         {% csrf_token %}
         <label for="tipo-gas">Tipo de Gás:</label>
         <select id="tipo-gas" name="gas_tipo" onchange="mostrarOpcaoGas(); salvarDados()">
@@ -75,13 +75,13 @@
         <!-- Input para cálculo com botijão -->
         <div id="input-botijao">
           <label for="qtd-botijao">Quantidade de botijões por mês:</label>
-          <input type="number" id="qtd-botijao" name="botijao_gas" placeholder="Informe a quantidade" step="0.01" min="0" onchange="salvarDados()">
+          <input type="number" id="qtd-botijao" name="botijao_gas" placeholder="Informe a quantidade (Mês)" step="0.01" min="0" onchange="salvarDados()">
         </div>
       
         <!-- Input para cálculo com gás encanado -->
         <div id="input-encanado" style="display: none;">
           <label for="qtd-encanado">Consumo em m³/mês:</label>
-          <input type="number" id="qtd-encanado" name="volume_gas" placeholder="Informe o consumo" step="0.01" min="0" onchange="salvarDados()">
+          <input type="number" id="qtd-encanado" name="volume_gas" placeholder="Informe o consumo (Mês)" step="0.01" min="0" onchange="salvarDados()">
         </div>
       
         <button type="submit">Calcular</button>
@@ -96,7 +96,7 @@
     <!-- Calculadora Energia -->
     <div class="calculadora" id="energia-calculo">
         <h2>Energia Elétrica</h2>
-        <form method="post">
+        <form method="post" onsubmit="return verificarEnergia()">
           {% csrf_token %}
           <label for="tipo-energia">Tipo de Cálculo:</label>
           <select id="tipo-energia" name="energia_tipo" onchange="exibirInputEnergia(); salvarDados();">
@@ -109,7 +109,7 @@
           <!-- Input para kWh consumidos -->
         <div id="input-kwh" style="display: none;">
             <label for="kwh-consumidos">Consumo em kWh:</label>
-            <input type="number" id="kwh-consumidos-input" name="kwh_usado" placeholder="Informe o consumo" step="0.01" min="0" onchange="salvarDados()">
+            <input type="number" id="kwh-consumidos-input" name="kwh_usado" placeholder="Informe o consumo em kWh (Mês)" step="0.01" min="0" onchange="salvarDados()">
         </div>
 
           <!-- Input para valor da conta -->
@@ -151,6 +151,7 @@
     </div>
   </div>
   
+  <!-- Botões para limpar todos os dados ou retornar à Página inicial-->
   <div class='botoes'>
     <div class="button-voltar">
       <div class="button-container">

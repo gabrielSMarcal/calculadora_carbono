@@ -54,7 +54,7 @@ def calculadora(request):
     onibus_resultado = request.session['onibus_resultado']
     gas_resultado = request.session['gas_resultado']
     
-    # Inicialização das variáveis
+    # Inicialização das variáveis de resultuados
     total_anual = 0
     arvores_necessarias = 0
     custo_arvores = 0
