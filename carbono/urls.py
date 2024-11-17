@@ -3,7 +3,9 @@ from django.urls import path
 from . import views
 
 '''
-DEFINIÇÃO DOS CAMINHOS A SEREM DIRECIONADOS PARA ACESSO ÀS PÁGINAS, PODENDO SER DE UMA PÁGINA À OUTRA, OU REINÍCIO DE PÁGINA
+********************************************************************************************************************************
+* DEFINIÇÃO DOS CAMINHOS A SEREM DIRECIONADOS PARA ACESSO ÀS PÁGINAS, PODENDO SER DE UMA PÁGINA À OUTRA, OU REINÍCIO DE PÁGINA *
+********************************************************************************************************************************
 '''
 
 urlpatterns = [

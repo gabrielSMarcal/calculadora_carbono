@@ -3,7 +3,9 @@ from django.contrib import admin
 from .models import Carro, Energia, Gas
 
 '''
-PARTE DO CÓDIGO SEPARADA PARA CONFIGURAÇÃO DOS DADOS NOS MODELOS PELO /admin
+********************************************************************************
+* PARTE DO CÓDIGO SEPARADA PARA CONFIGURAÇÃO DOS DADOS NOS MODELOS PELO /admin *
+********************************************************************************
 '''
 
 # Configuração admin para Carros

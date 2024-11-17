@@ -1,7 +1,9 @@
 from django import template
 
 '''
-FORMATAÇÃO DE NÚMEROS DAS TEMPLATES PARA PONTUAR NÚMEROS A CADA 3 DÍGITOS E PERMITIR FORMATAÇÃO PARA NÚMEROS APÓS DA VÍRGULA
+********************************************************************************************************************************
+* FORMATAÇÃO DE NÚMEROS DAS TEMPLATES PARA PONTUAR NÚMEROS A CADA 3 DÍGITOS E PERMITIR FORMATAÇÃO PARA NÚMEROS APÓS DA VÍRGULA *
+********************************************************************************************************************************
 '''
 
 # Registro para os filtros personalizados

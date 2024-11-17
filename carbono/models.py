@@ -2,7 +2,10 @@ from django.db import models
 from django.db.models.base import class_prepared
 
 '''
-PARTE DO CODIGO ONDE FICA CONFIGURADO O MODELO PARA CADA POSSÍVEL TIPO DE CÁLCULO QUE SERÁ APLICADO, NOTA QUE ÔNIBUS ESTÁ CONFIGURADO DENTRO DO CARRO, POR TER ESTRUTURA SEMELHANTE, MAS REALIZA UM CÁLCULO DIFERENTE.
+*********************************************************************************************************************
+* PARTE DO CODIGO ONDE FICA CONFIGURADO O MODELO PARA CADA POSSÍVEL TIPO DE CÁLCULO QUE SERÁ APLICADO.              *
+* NOTA QUE ÔNIBUS ESTÁ CONFIGURADO DENTRO DO CARRO, POR TER ESTRUTURA SEMELHANTE, MAS REALIZA UM CÁLCULO DIFERENTE. *
+*********************************************************************************************************************
 '''
 
 # Classe que configura o modelo para Carros

@@ -46,12 +46,12 @@
     <!-- Calculadora Ônibus -->
     <div class="calculadora" id="onibus-calculo">
       <h2>Transporte Público - Ônibus</h2>
-      <form method="post">
+      <form method="post" onsubmit="return verificarOnibus()">
         {% csrf_token %}
         <label for="km-onibus">Km percorridos:</label>
         <input type="number" id="km-onibus" name="km_por_mes_onibus" placeholder="Informe a quilometragem (Mês)" step="0.01" min="0" onchange="salvarDados()">
         <button type="submit">Calcular</button>
-        <button type="button" onclick="limparTransporte()">Limpar</button>
+        <button type="button" onclick="limparOnibus()">Limpar</button>
       </form>
       {% if onibus_resultado %}
         <p id="resultado-onibus-mensal">Crédito de Carbono Mensal: {{ onibus_resultado.credito|format_number }} tCO<sub>2</sub></p>
@@ -99,7 +99,7 @@
         <form method="post" onsubmit="return verificarEnergia()">
           {% csrf_token %}
           <label for="tipo-energia">Tipo de Cálculo:</label>
-          <select id="tipo-energia" name="energia_tipo" onchange="exibirInputEnergia(); salvarDados();">
+          <select id="tipo-energia" name="energia_tipo" onchange="mostrarOpcaoEnergia(); salvarDados();">
             <option value="">Selecione o modo de cálculo para energia</option>
               {% for energia in energias %}
               <option value="{{ energia.modo_de_calculo }}">{{ energia.modo_de_calculo }}</option>

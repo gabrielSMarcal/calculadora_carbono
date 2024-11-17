@@ -24,28 +24,69 @@ function restaurarDados() {
   document.getElementById('valor-conta-input').value = localStorage.getItem('valor-conta-input') || "";
 };
 
+/* FUNÇÕES PARA VERIFICAR OS DADOS INSERIDOS PELO USUÁRIO */
+
+// Função para verificar se os campos de Carro estão preenchidos
 function verificarCarro() {
   const tipoCarro = document.getElementById('tipo-carro').value;
+  const kmCarro = document.getElementById('km-carro').value;
+
   if (tipoCarro === "") {
     alert("Selecione um tipo de veículo 🚗");
     return false;
   }
-  return true;
-};
-
-function verificarGas() {
-  const tipoGas = document.getElementById('tipo-gas').value;
-  if (tipoGas === "") {
-    alert("Selecione um modo de cálculo para gás 🏮");
+  if (kmCarro === "") {
+    alert("Insira a quilometragem percorrida 🚗");
     return false;
   }
   return true;
 };
 
+// Função para verificar se o campo de Ônibus está preenchido
+function verificarOnibus() {
+  const kmOnibus = document.getElementById('km-onibus').value;
+  if (kmOnibus === "") {
+    alert("Insira a quilometragem percorrida no ônibus 🚌");
+    return false;
+  }
+  return true;
+};
+
+// Função para verificar se os campos de Gás estão preenchidos
+function verificarGas() {
+  const tipoGas = document.getElementById('tipo-gas').value;
+  const qtdBotijao = document.getElementById('qtd-botijao').value;
+  const qtdEncanado = document.getElementById('qtd-encanado').value;
+  if (tipoGas === "") {
+    alert("Selecione um modo de cálculo para gás 🏮");
+    return false;
+  }
+  if (tipoGas === "Botijão (13kg)" && qtdBotijao === "") {
+    alert("Insira a quantidade de botijões 🏮");
+    return false;
+  }
+  if (tipoGas === "Gás Encanado (m³/mês)" && qtdEncanado === "") {
+    alert("Insira o consumo de gás encanado 🏮");
+    return false;
+  }
+  return true;
+};
+
+// Função para verificar se os campos de Energia estão preenchidos
 function verificarEnergia() {
   const tipoEnergia = document.getElementById('tipo-energia').value;
+  const kwhConsumidos = document.getElementById('kwh-consumidos-input').value;
+  const valorConta = document.getElementById('valor-conta-input').value;
   if (tipoEnergia === "") {
     alert("Selecione um modo de cálculo para energia ⚡");
+    return false;
+  }
+  if (tipoEnergia === "kWh" && kwhConsumidos === "") {
+    alert("Insira o consumo em kWh ⚡");
+    return false;
+  }
+  if (tipoEnergia === "Conta de Luz" && valorConta === "") {
+    alert("Insira o valor da conta de luz ⚡");
     return false;
   }
   return true;
@@ -78,7 +119,7 @@ function limparDados() {
 // Chamar a função para restaurar os dados ao carregar a página
 window.onload = function() {
   restaurarDados();
-  exibirInputEnergia();
+  mostrarOpcaoEnergia();
   mostrarOpcaoGas();
 };
 
@@ -90,7 +131,7 @@ function limparCarro() {
 };
 
 // Função para limpar os dados de Ônibus
-function limparTransporte() {
+function limparOnibus() {
   localStorage.removeItem('km-onibus');
   window.location.href = '/limpar_onibus/';
 };
@@ -112,7 +153,7 @@ function limparGas() {
 };
 
 // Retorno do input de acordo com a opção selecionada
-function exibirInputEnergia() {
+function mostrarOpcaoEnergia() {
   const tipoEnergia = document.getElementById('tipo-energia').value;
   const inputValorConta = document.getElementById('input-valor-conta');
   const inputKwh = document.getElementById('input-kwh');
