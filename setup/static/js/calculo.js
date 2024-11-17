@@ -24,13 +24,6 @@ function restaurarDados() {
   document.getElementById('valor-conta-input').value = localStorage.getItem('valor-conta-input') || "";
 };
 
-// Chamar a função para restaurar os dados ao carregar a página
-window.onload = function() {
-  restaurarDados();
-  mostrarOpcaoEnergia();
-  mostrarOpcaoGas();
-};
-
 /* FUNÇÕES PARA VERIFICAR OS DADOS INSERIDOS PELO USUÁRIO */
 
 // Função para verificar se os campos de Carro estão preenchidos
@@ -119,6 +112,13 @@ function limparDados() {
   document.getElementById('resultado-gas-anual').innerHTML = "";
   document.getElementById('resultado-energia-mensal').innerHTML = "";
   document.getElementById('resultado-energia-anual').innerHTML = "";
+};
+
+// Chamar a função para restaurar os dados ao carregar a página
+window.onload = function() {
+  restaurarDados();
+  mostrarOpcaoEnergia();
+  mostrarOpcaoGas();
 };
 
 // Função para limpar os dados de Carro
