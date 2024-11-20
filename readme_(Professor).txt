@@ -33,3 +33,8 @@
       http://127.0.0.1:8000/
       ```
 
+4. **Navegação:**
+    - Navegando pela página inicial (Index), teremos um site informativo,
+    ao descer a página até o final teremos uma oção escrito "Comece agora, clique nele
+
+    - Na página da calculadora teremos todas as suas funcionalidades prontas para teste, de acordo com documentação.
