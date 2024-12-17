@@ -39,7 +39,7 @@ Abra seu terminal e navegue até o diretório onde deseja clonar o projeto e exe
   
        py -m venv venv
 
-Isso criará uma pasta chamada venv dentro do seu diretporio de projeto, contendo uma cópia isolada do interpretador Python e de todas as dependências do projeto.
+Isso criará uma pasta chamada venv dentro do seu diretório de projeto, contendo uma cópia isolada do interpretador Python e de todas as dependências do projeto.
 
 <hr>
 
